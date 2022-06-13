@@ -36,7 +36,7 @@ options:
 
 # ###################################################################
 
-function zcratemaker_getconfig(t: text) :: object:
+function zcratemaker_getconfig(t: text) :: objects:
     if {_t} is "prefix":
         return {@prefix}
     else if {_t} is "gui [name]":

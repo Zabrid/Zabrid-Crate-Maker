@@ -11,7 +11,7 @@
 
 # ###################################################################
 
-function zclans_genrandomstring(length: integer) :: text: # This is used to give items unique identifiers
+function zcratemaker_genrandomstring(length: integer) :: text: # This is used to give items unique identifiers
     add "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" and "10" to {_list::*}
     set {_return} to ""
     loop {_length} times:
@@ -36,14 +36,14 @@ function zcratemaker_createcrate(name: text) :: boolean: # Will return true if w
     set {zcratemaker::crates::%{_name}%::cratekeyname} to "&6{name} Key"
     set {zcratemaker::crates::%{_name}%::cratekeylore} to "&bRight click the {name} crate to open."
 
-    add 1 of stone shovel named "&eExample Item" with nbt "{zcratemakerchance:100,zcratemakeritemid:""%zclans_genrandomstring(50)%""}" to {zcratemaker::crates::%{_name}%::items::*}
+    add 1 of stone shovel named "&eExample Item" with nbt "{zcratemakerchance:100,zcratemakeritemid:""%zcratemaker_genrandomstring(50)%""}" to {zcratemaker::crates::%{_name}%::items::*}
 
     return true
 
 
-function zcratemaker_additem(name: text, chance: number, item: item stack) :: boolean:
+function zcratemaker_additem(name: text, chance: number, item: item) :: boolean:
     if {zcratemaker::crates::%{_name}%} is not set:
         return false
-    add {_item} with nbt "{zcratemakerchance:%{_chance}%,zcratemakeritemid:""%zclans_genrandomstring(50)%""}" to {zcratemaker::crates::%{_name}%::items::*}
+    add {_item} with nbt "{zcratemakerchance:%{_chance}%,zcratemakeritemid:""%zcratemaker_genrandomstring(50)%""}" to {zcratemaker::crates::%{_name}%::items::*}
     return true
 

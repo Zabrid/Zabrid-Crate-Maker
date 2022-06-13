@@ -15,6 +15,7 @@ options:
 # ###################################################################
 
     message [no-perms]: "{prefix} &cYou do not have the required permissions to use this command."
+    message [argument-not-recognized]: "&fThe argument you specified &3""{argument}""&f is not known." and "&eFor a list of valid arguments use &n/crates help&e."
 
 
 
@@ -30,4 +31,4 @@ options:
 
 function zcratemaker_getlang(t: text) :: object:
     if {_t} is "no-perms":
-        return message [no-perms]
+        return {@message [no-perms]}
