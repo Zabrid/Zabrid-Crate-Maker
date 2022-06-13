@@ -1,0 +1,31 @@
+options:
+    config-version: 1.0.0
+# ###################################################################
+
+# Zabrid's Crate Maker
+# Author(s): {zabrid}#3433
+# Version: 1.0.0
+
+# ###################################################################
+
+# ###################################################################
+
+# Language Configuration
+
+# ###################################################################
+
+    message [no-perms]: "{prefix} &cYou do not have the required permissions to use this command."
+
+
+
+
+# ###################################################################
+
+# Language Function
+
+# This is the function that allows Zabrid's Crate
+# Maker to know what you configured in this file.
+
+# ###################################################################
+
+function zcratemaker_getlang(t: text) :: object:

@@ -10,3 +10,5 @@ If you report an issue which has been fixed or does not contain the information 
 Skript - https://github.com/SkriptLang/Skript/releases
 
 SkBee - https://www.spigotmc.org/resources/skbee-skript-addon.75839/
+
+SkriptYAML - https://www.spigotmc.org/resources/skript-yaml.49829/
