@@ -1,0 +1,41 @@
+# ###################################################################
+
+# Zabrid's Crate Maker
+# Source Code
+
+# Feel free to change anything below this point.
+# Although, beware you might break something!
+
+# If you make a change and think that it should be pushed to the official script
+# make a pull request on the GitHub https://github.com/Zabrid/Zabrid-Crate-Maker
+
+# ###################################################################
+
+function zcratemaker_createcrate(name: text) :: boolean: # Will return true if worked, false if not
+    if {zcratemaker::crates::%{_name}%} is set:
+        return false
+    set {zcratemaker::crates::%{_name}%} to true
+
+    set {zcratemaker::crates::%{_name}%::displayname} to "&6&l{name} Key" # This is used for messages and broadcasts
+
+    # Crate GUI Stuff
+    set {zcratemaker::crates::%{_name}%::guicrateitem} to tripwire hook
+    set {zcratemaker::crates::%{_name}%::guicrateslot} to 0
+    set {zcratemaker::crates::%{_name}%::guicratename} to "&6{name} Key"  # This is used for the GUI item
+    set {zcratemaker::crates::%{_name}%::guicratelore} to "||&7Keys: &e{keys}||||&bLeft click to open this crate||&bRight click to preview this crate||&bMiddle click to open all keys."
+
+    # Crate Key Stuff
+    set {zcratemaker::crates::%{_name}%::cratekeyitem} to tripwire hook
+    set {zcratemaker::crates::%{_name}%::cratekeyname} to "&6{name} Key"
+    set {zcratemaker::crates::%{_name}%::cratekeylore} to "&bRight click the {name} crate to open."
+
+    add 1 of stone shovel named "&eExample Item" with nbt "{zcratemakerchance:100}" to {zcratemaker::crates::%{_name}%::items::*}
+
+    return true
+
+
+function zcratemaker_additem(name: text, chance: number, item: item stack) :: boolean:
+    if {zcratemaker::crates::%{_name}%} is not set:
+        return false
+    add {_item} with nbt "{zcratemakerchance:%{_chance}%" to {zcratemaker::crates::%{_name}%::items::*}
+    return true
