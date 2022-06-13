@@ -1,0 +1,53 @@
+# ###################################################################
+
+# Zabrid's Crate Maker
+# Source Code
+
+# Feel free to change anything below this point.
+# Although, beware you might break something!
+
+# If you make a change and think that it should be pushed to the official script
+# make a pull request on the GitHub https://github.com/Zabrid/Zabrid-Crate-Maker
+
+# ###################################################################
+
+command /crates [<text>] [<offline player>] [<text>] [<text>]:
+    aliases: /crate, /zcrates
+    trigger:
+        if arg 1 is not set:
+            # Empty
+        else if arg 1 is "help":
+            if player does not have permission "zcratemaker.help":
+                send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
+                stop
+            send formatted "&8-----------------------------"
+            send formatted "&6&lZabrid Crate Maker"
+            send formatted ""
+            send formatted "&8 -> &6/crate"
+            send formatted "&7  -> &fOpen virtual crate menu."
+            send formatted ""
+            send formatted "&8 -> &6/crate list"
+            send formatted "&7  -> &fGet a list of all crates."
+            send formatted ""
+            send formatted "&8 -> &6/crate create <name>"
+            send formatted "&7  -> &fCreate a new crate."
+            send formatted ""
+            send formatted "&8 -> &6/crate edit <name>"
+            send formatted "&7  -> &fEdit everything about a crate."
+            send formatted ""
+            send formatted "&8 -> &6/crate setcrate <name>"
+            send formatted "&7  -> &fSet the block you're looking at to a crate."
+            send formatted ""
+            send formatted "&8 -> &6/crate give <player> <crate> <type: virtual,physical> <amt?1> <suggest command:/crate give %player% common virtual 1>&a[EXAMPLE]"
+            send formatted "  &7-> &fGive a crate key to a player."
+            send formatted ""
+            send formatted "&8 -> &6/crate giveall <crate> <type: virtual,physical> <amt?1> <suggest command:/crate giveall common virtual 1>&a[EXAMPLE]"
+            send formatted "  &7-> &fGive a crate key to all players."
+            send formatted ""
+            send formatted "&8 -> &6/crate take <player> <crate> <amt?1> <suggest command:/crate take %player% common 1>&a[EXAMPLE]"
+            send formatted "  &7-> &fTake a virtual key from a player."
+            send formatted "&8-----------------------------"
+        else:
+            set {_message::*} to zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("argument-not-recognized")) 
+            replace all "{argument}" in {_message::*} with arg 1
+            send {_message::*}

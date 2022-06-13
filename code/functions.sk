@@ -47,3 +47,7 @@ function zcratemaker_additem(name: text, chance: number, item: item) :: boolean:
     add {_item} with nbt "{zcratemakerchance:%{_chance}%,zcratemakeritemid:""%zcratemaker_genrandomstring(50)%""}" to {zcratemaker::crates::%{_name}%::items::*}
     return true
 
+function zcratemaker_formatbasicmessage(sender: text, t: objects) :: texts:
+    replace all "{prefix}" in {_t::*} with "%zcratemaker_getconfig("prefix")%"
+    replace all "{player}" in {_t::*} with {_sender}
+    return {_t::*}
