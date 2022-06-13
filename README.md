@@ -8,4 +8,5 @@ If you report an issue which has been fixed or does not contain the information 
 
 ## Dependencies
 Skript - https://github.com/SkriptLang/Skript/releases
+
 SkBee - https://www.spigotmc.org/resources/skbee-skript-addon.75839/
