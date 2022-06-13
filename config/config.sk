@@ -34,3 +34,11 @@ options:
 # ###################################################################
 
 function zcratemaker_getconfig(t: text) :: object:
+    if {_t} is "prefix":
+        return {@prefix}
+    else if {_t} is "gui [name]":
+        return {@gui [name]}
+    else if {_t} is "gui [size]":
+        return {@gui [size]}
+    else if {_t} is "gui [fill-item]":
+        return {@gui [fill-item]}
