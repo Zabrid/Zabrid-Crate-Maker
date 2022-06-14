@@ -1,0 +1,18 @@
+# ###################################################################
+
+# Zabrid's Crate Maker
+# Source Code
+
+# Feel free to change anything below this point.
+# Although, beware you might break something!
+
+# If you make a change and think that it should be pushed to the official script
+# make a pull request on the GitHub https://github.com/Zabrid/Zabrid-Crate-Maker
+
+# ###################################################################
+
+# Edit GUI
+function zcratemaker_gui_edit(p: player, crate: text) :: text:
+    set {_gui} to chest inventory named "&8Crate Editor" with 4 rows
+    set slot (all integers between 0 and 54) of {_gui} to 1 of black stained glass pane named "&8Crate Editor"
+    open {_gui} to {_p}

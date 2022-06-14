@@ -11,42 +11,90 @@
 
 # ###################################################################
 
-command /crates [<text>] [<offline player>] [<text>] [<text>]:
+command /crates [<text>] [<text>] [<text>] [<text>]:
     aliases: /crate, /zcrates
     trigger:
         if arg 1 is not set:
             # Empty
+        
         else if arg 1 is "help":
             if player does not have permission "zcratemaker.help":
                 send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
                 stop
-            send formatted "&8-----------------------------"
-            send formatted "&6&lZabrid Crate Maker"
-            send formatted ""
-            send formatted "&8 -> &6/crate"
-            send formatted "&7  -> &fOpen virtual crate menu."
-            send formatted ""
-            send formatted "&8 -> &6/crate list"
-            send formatted "&7  -> &fGet a list of all crates."
-            send formatted ""
-            send formatted "&8 -> &6/crate create <name>"
-            send formatted "&7  -> &fCreate a new crate."
-            send formatted ""
-            send formatted "&8 -> &6/crate edit <name>"
-            send formatted "&7  -> &fEdit everything about a crate."
-            send formatted ""
-            send formatted "&8 -> &6/crate setcrate <name>"
-            send formatted "&7  -> &fSet the block you're looking at to a crate."
-            send formatted ""
-            send formatted "&8 -> &6/crate give <player> <crate> <type: virtual,physical> <amt?1> <suggest command:/crate give %player% common virtual 1>&a[EXAMPLE]"
-            send formatted "  &7-> &fGive a crate key to a player."
-            send formatted ""
-            send formatted "&8 -> &6/crate giveall <crate> <type: virtual,physical> <amt?1> <suggest command:/crate giveall common virtual 1>&a[EXAMPLE]"
-            send formatted "  &7-> &fGive a crate key to all players."
-            send formatted ""
-            send formatted "&8 -> &6/crate take <player> <crate> <amt?1> <suggest command:/crate take %player% common 1>&a[EXAMPLE]"
-            send formatted "  &7-> &fTake a virtual key from a player."
-            send formatted "&8-----------------------------"
+            send ""
+            send "&e&lCrate Maker"
+            send "&7 Author(s): &e{zabrid}##3433"
+            send ""
+            send "&7&o (( Hover for more information about commands ))"
+            send ""
+            send "&6 -> &e/crate &7&o(zcratemaker.gui)"
+            send "&6 -> &e/crate list &7&o(zcratemaker.list)"
+            send "&6 -> &e/crate create <name> &7&o(zcratemaker.create)"
+            send "&6 -> &e/crate delete <name> &7&o(zcratemaker.delete)"
+            send "&6 -> &e/crate edit <name> &7&o(zcratemaker.edit)"
+            send "&6 -> &e/crate setcrate <name> &7&o(zcratemaker.setcrate)"
+            send "&6 -> &e/crate give <player> <crate> <type> <amt?1> &7&o(zcratemaker.give)"
+            send "&6 -> &e/crate giveall <crate> <type> <amt?1> &7&o(zcratemaker.giveall)"
+            send "&6 -> &e/crate take <player> <crate> <amt?1> &7&o(zcratemaker.take)"
+            send ""
+        else if arg 1 is "create":
+            if player has permission "zcratemaker.create":   
+                set {_allow} to true
+            if sender is console:
+                set {_allow} to true
+            if {_allow} is not true:
+                send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
+                stop
+            if arg 1 is not set:
+                send "&cYou have not specified a name for the crate."
+                send "&6 -> &e/crate create <name>"
+                stop
+            if zcratemaker_createcrate(arg 2) is false:
+                send "&cThere is already a crate with that name."
+                stop
+            send ""
+            send "&a&lYOU HAVE CREATED A NEW CRATE"
+            send ""
+            send "&6 -> &eCreate Name: %arg 2%"
+            send ""
+            send formatted "&6 -> &eYou can edit the crate with &6/crate edit %{_cmd}% &7<suggest command:/crate edit %arg 1%>(Click Here)"
+            send formatted "&6 -> &eYou can also delete the crate with &6/cmd delete %arg 1% &7<suggest command:/crate delete %arg 1%>(Click Here)"
+            send ""
+
+        else if arg 1 is "delete":
+            if player has permission "zcratemaker.delete":   
+                set {_allow} to true
+            if sender is console:
+                set {_allow} to true
+            if {_allow} is not true:
+                send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
+                stop
+            if arg 2 is not set:
+                send "&cYou have not specified the name of the crate"
+                send "&6 -> &e/crate delete <name>"
+                stop
+            if {zcratemaker::crates::%arg 2%} is not set:
+                send "&cThere is no crate with that name."
+                stop
+            send "&cAre you sure you wish to delete this crate?"
+            send formatted "&cto confirm click <cmd:/crate d!elete-confirm$ %arg 2%>&fHere."
+        else if arg 1 is "d!elete-confirm$":
+            if player has permission "zcratemaker.delete":   
+                set {_allow} to true
+            if sender is console:
+                set {_allow} to true
+            if {_allow} is not true:
+                send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
+                stop
+            if arg 2 is not set:
+                send "&cYou have not specified the name of the crate"
+                send "&6 -> &e/crate delete <name>"
+                stop
+            if zcratemaker_deletecrate(arg 2) is false:
+                send "&cThere is no crate with that name."
+                stop
+            send "&6You have successfully delete the %arg 2% crate."
+
         else:
             set {_message::*} to zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("argument-not-recognized")) 
             replace all "{argument}" in {_message::*} with arg 1

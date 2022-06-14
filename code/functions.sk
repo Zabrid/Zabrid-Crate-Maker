@@ -23,7 +23,7 @@ function zcratemaker_createcrate(name: text) :: boolean: # Will return true if w
         return false
     set {zcratemaker::crates::%{_name}%} to true
 
-    set {zcratemaker::crates::%{_name}%::displayname} to "&6&l{name} Key" # This is used for messages and broadcasts
+    set {zcratemaker::crates::%{_name}%::displayname} to "&6&l{name} Crate" # This is used for messages and broadcasts
 
     # Crate GUI Stuff
     set {zcratemaker::crates::%{_name}%::guicrateitem} to tripwire hook
@@ -38,6 +38,13 @@ function zcratemaker_createcrate(name: text) :: boolean: # Will return true if w
 
     add 1 of stone shovel named "&eExample Item" with nbt "{zcratemakerchance:100,zcratemakeritemid:""%zcratemaker_genrandomstring(50)%""}" to {zcratemaker::crates::%{_name}%::items::*}
 
+    return true
+
+
+function zcratemaker_deletecrate(name: text) :: boolean:
+    if {zcratemaker::crates::%{_name}%} is not set:
+        return false
+    delete {zcratemaker::crates::%{_name}%::*} and {zcratemaker::crates::%{_name}%} and {zcratemaker::crates::%{_name}%::items::*}
     return true
 
 
