@@ -37,6 +37,7 @@ command /crates [<text>] [<text>] [<text>] [<text>]:
             send "&6 -> &e/crate giveall <crate> <type> <amt?1> &7&o(zcratemaker.giveall)"
             send "&6 -> &e/crate take <player> <crate> <amt?1> &7&o(zcratemaker.take)"
             send ""
+
         else if arg 1 is "create":
             if player has permission "zcratemaker.create":   
                 set {_allow} to true
@@ -94,6 +95,33 @@ command /crates [<text>] [<text>] [<text>] [<text>]:
                 send "&cThere is no crate with that name."
                 stop
             send "&6You have successfully delete the %arg 2% crate."
+
+        else if arg 1 is "edit":
+            if player does not have permission "zcratemaker.edit":   
+                send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
+                stop
+            if arg 2 is not set:
+                send "&cYou have not specified the name of the crate"
+                send "&6 -> &e/crate edit <name>"
+                stop
+            if {zcratemaker::crates::%arg 2%} is not set:
+                send "&cThere is no crate with that name."
+                stop
+            zcratemaker_gui_edit(player, arg 2)
+
+        else if arg 1 is "list":
+            if player does not have permission "zcratemaker.edit":   
+                send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
+                stop
+            if size of {zcratemaker::crates::*} is less than 1:
+                send "&cThere have been no crates created."
+                send formatted "&8 -> &eCreate a command with &6/crates create <suggest command:/crates create>&7(Click Here)"
+                stop
+            send ""
+            send "&6Full list of all created crates:"
+            loop {zcratemaker::crates::*}:
+                send formatted "&6 -> &e%loop-index% crate &8- <suggest command:/crates edit %loop-index%>&e(Edit)<suggest command:/crates delete %loop-index%> &4(Delete)"
+            send ""
 
         else:
             set {_message::*} to zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("argument-not-recognized")) 

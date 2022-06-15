@@ -13,6 +13,6 @@
 
 # Edit GUI
 function zcratemaker_gui_edit(p: player, crate: text) :: text:
-    set {_gui} to chest inventory named "&8Crate Editor" with 4 rows
+    set {_gui} to chest inventory named "&8Crate Editor | &6%{_crate}% Crate" with 4 rows
     set slot (all integers between 0 and 54) of {_gui} to 1 of black stained glass pane named "&8Crate Editor"
     open {_gui} to {_p}
