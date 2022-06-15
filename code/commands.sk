@@ -58,8 +58,8 @@ command /crates [<text>] [<text>] [<text>] [<text>]:
             send ""
             send "&6 -> &eCreate Name: %arg 2%"
             send ""
-            send formatted "&6 -> &eYou can edit the crate with &6/crate edit %{_cmd}% &7<suggest command:/crate edit %arg 1%>(Click Here)"
-            send formatted "&6 -> &eYou can also delete the crate with &6/cmd delete %arg 1% &7<suggest command:/crate delete %arg 1%>(Click Here)"
+            send formatted "&6 -> &eYou can edit the crate with &6/crate edit %arg 2% &7<suggest command:/crate edit %arg 2%>(Click Here)"
+            send formatted "&6 -> &eYou can also delete the crate with &6/cmd delete %arg 2% &7<suggest command:/crate delete %arg 2%>(Click Here)"
             send ""
 
         else if arg 1 is "delete":

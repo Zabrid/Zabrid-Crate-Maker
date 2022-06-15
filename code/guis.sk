@@ -13,6 +13,17 @@
 
 # Edit GUI
 function zcratemaker_gui_edit(p: player, crate: text) :: text:
-    set {_gui} to chest inventory named "&8Crate Editor | &6%{_crate}% Crate" with 4 rows
-    set slot (all integers between 0 and 54) of {_gui} to 1 of black stained glass pane named "&8Crate Editor"
+    set {_gui} to chest inventory named "&8Zabrid's Crate Maker | &6&l%{_crate}%" with 3 rows
+    set {_gui} to zcratemaker_bordergui({_gui}, 3, 1 of grey stained glass pane named "&8Zabrid's Crate Maker")
+
+    # Crate Key Customization Display
+    set {_key-item} to {zcratemaker::crates::%{_crate}%::cratekeyitem}
+    set {_key-name} to {zcratemaker::crates::%{_crate}%::cratekeyname}
+    set {_key-lore::*} to {zcratemaker::crates::%{_crate}%::cratekeylore} split by "||"
+    loop {_key-lore::*}:
+        set {_key-lore::%loop-index%} to "&6 - &f%loop-value%"
+    set slot 10 of {_gui} to 1 of tripwire hook named "&eCrate Key Customization" with lore "&8Zabrid's Crate Maker" and "" and "&eItem: &f%{_key-item}%" and "" and "&eName: &f%{_key-name}%" and "" and "&eLore:" and {_key-lore::*} and "" and "&bLeft Click to edit the crate key item."
+
+
+
     open {_gui} to {_p}
