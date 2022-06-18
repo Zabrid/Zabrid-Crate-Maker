@@ -1,0 +1,50 @@
+# ###################################################################
+
+# Zabrid's Crate Maker
+# Source Code
+
+# Feel free to change anything below this point.
+# Although, beware you might break something!
+
+# If you make a change and think that it should be pushed to the official script
+# make a pull request on the GitHub https://github.com/Zabrid/Zabrid-Crate-Maker
+
+# ###################################################################
+
+function zcratemaker_sendchatquery(p: player, crate: text, query: text):
+    {zcratemaker::crates::%{_crate}%} is set
+    set {_crate} to {zcratemaker::crates::%{_crate}%}
+    set {_uuid} to uuid of {_p}
+    if {_query} is "cratekeyedit-name":
+        send "" to {_p}
+        send "&6Changing &6&l%{_crate}% Crate Key's&6 Name" to {_p}
+        send "&6Type what you wish to set %{_crate}% Crate Key's name to." to {_p}
+        send "" to {_p}
+        send "&c&l -> &7Type 'cancel' to cancel the change." to {_p}
+        send "" to {_p}
+        close {_p}'s inventory
+        set {zcmdmaker::changetime::%{_uuid}%} to now
+        set {_now} to now
+        set {zcratemaker::changetype::%{_uuid}%} to {_query}
+        set {zcratemaker::changeitem::%{_uuid}%} to {_crate}
+        wait 40 seconds
+        {zcratemaker::changetype::%{_uuid}%} is {_now}
+        send "&cYour time to change the crate key name has run out." to {_p}
+        zcmdmaker_openeditgui({_p}, {_crate})
+        delete {zcratemaker::changetime::%{_uuid}%} and {zcratemaker::changetype::%{_uuid}%} and {zcratemaker::changeitem::%{_uuid}%}
+        stop
+
+on chat:
+    player has permission "zcratemaker.edit"
+    set {_uuid} to uuid of player
+    {zcratemaker::changetype::%{_uuid}%} is set
+
+    cancel event
+
+    if {zcratemaker::changetype::%{_uuid}%} is "cratekeyedit-name":
+        set {_crate} to {zcratemaker::changeitem::%{_uuid}%}
+        if message is "cancel":
+            zcratemaker_gui_editcratekey(player, {_crate})
+            delete {zcratemaker::changetime::%{_uuid}%} and {zcratemaker::changetype::%{_uuid}%} and {zcratemaker::changeitem::%{_uuid}%}
+            send "&cYou have cancelled the changing of the crate key item name."
+            stop

@@ -28,7 +28,7 @@ function zcratemaker_bordergui(gui: inventory, rows: number, borderItem: item) :
 function zcratemaker_createcrate(name: text) :: boolean: # Will return true if worked, false if not
     if {zcratemaker::crates::%{_name}%} is set:
         return false
-    set {zcratemaker::crates::%{_name}%} to true
+    set {zcratemaker::crates::%{_name}%} to {_name}
 
     set {zcratemaker::crates::%{_name}%::displayname} to "&6&l{name} Crate" # This is used for messages and broadcasts
 
