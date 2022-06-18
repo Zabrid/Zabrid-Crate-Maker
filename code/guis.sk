@@ -56,11 +56,13 @@ function zcratemaker_gui_editcratekey(p: player, crate: text):
     set {_name} to {zcratemaker::crates::%{_crate}%::cratekeyname}
     set slot 13 of {_gui} to 1 of empty map with all flags hidden named "&6Edit Crate Key Name" with lore "&8Zabrid's Crate Maker" and "" and "&7Edit the name of this crate key." and "" and "&eName: &f%{_name}%" and "" and "&bLeft click to set the name of the crate key."
 
-    set {_lore::*} to {zcratemaker::crates::%{_crate}%::cratekeylore} split by "||"
-    loop {_lore::*}:
+    set {_2lore::*} to {zcratemaker::crates::%{_crate}%::cratekeylore} split by "||"
+    loop {_2lore::*}:
         set {_lore::%loop-index%} to "&6 - &f%loop-value%"
     set slot 14 of {_gui} to 1 of wither rose with all flags hidden named "&6Edit Crate Key Name" with lore "&8Zabrid's Crate Maker" and "" and "&7Edit the lore of this crate key." and "" and "&eLore:" and {_lore::*} and "" and "&bLeft click to set the lore of the crate key."
 
+    set slot 4 of {_gui} to 1 of {_item} named {_name} with lore {_2lore::*}
+    
     open {_gui} to {_p}
 # Inventory Click
 on inventory click:
@@ -90,3 +92,9 @@ on inventory click:
             set {zcratemaker::crates::%{_crate}%::cratekeyitem} to player's tool's type
             send "&aYou have successfully updated the crate item of %{_crate}% to %{zcratemaker::crates::%{_crate}%::cratekeyitem}%"
             zcratemaker_gui_editcratekey(player, {_crate})
+        else if index of clicked slot is 13:
+            click action is left mouse button 
+            zcratemaker_sendchatquery(player, {_crate}, "cratekeyedit-name")
+        else if index of clicked slot is 14:
+            click action is left mouse button 
+            zcratemaker_sendchatquery(player, {_crate}, "cratekeyedit-lore")
