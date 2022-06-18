@@ -1,6 +1,6 @@
 # ###################################################################
 
-# Zabrid's Crate Maker
+# Zadzrfbrid's Crate Maker
 # Source Code
 
 # Feel free to change anything below this point.
@@ -12,7 +12,8 @@
 # ###################################################################
 
 # Edit GUI
-function zcratemaker_gui_edit(p: player, crate: text) :: text:
+function zcratemaker_gui_edit(p: player, crate: text):
+    {zcratemaker::crates::%{_crate}%} is set
     set {_gui} to chest inventory named "&8Zabrid's Crate Maker | &6&l%{_crate}%" with 3 rows
     set {_gui} to zcratemaker_bordergui({_gui}, 3, 1 of grey stained glass pane named "&8Zabrid's Crate Maker")
 
@@ -22,8 +23,42 @@ function zcratemaker_gui_edit(p: player, crate: text) :: text:
     set {_key-lore::*} to {zcratemaker::crates::%{_crate}%::cratekeylore} split by "||"
     loop {_key-lore::*}:
         set {_key-lore::%loop-index%} to "&6 - &f%loop-value%"
-    set slot 10 of {_gui} to 1 of tripwire hook named "&eCrate Key Customization" with lore "&8Zabrid's Crate Maker" and "" and "&eItem: &f%{_key-item}%" and "" and "&eName: &f%{_key-name}%" and "" and "&eLore:" and {_key-lore::*} and "" and "&bLeft Click to edit the crate key item."
+    set slot 12 of {_gui} to 1 of tripwire hook named "&eCrate Key Customization" with lore "&8Zabrid's Crate Maker" and "" and "&eItem: &f%{_key-item}%" and "" and "&eName: &f%{_key-name}%" and "" and "&eLore:" and {_key-lore::*} and "" and "&bLeft Click to edit the crate key item."
 
+    # GUI Customization
+    set {_slot} to {zcratemaker::crates::%{_crate}%::guicrateslot}
+    set {_item} to {zcratemaker::crates::%{_crate}%::guicrateitem}
+    set {_name} to {zcratemaker::crates::%{_crate}%::guicratename}
+    set {_lore::*} to {zcratemaker::crates::%{_crate}%::guicratelore} split by "||"
+    loop {_lore::*}:
+        set {_lore::%loop-index%} to "&6 - &f%loop-value%"
+    set slot 13 of {_gui} to 1 of ender chest named "&eCrate GUI Customization" with lore "&8Zabrid's Crate Maker" and "" and "&7Customize the item representing" and "&7this crate in the &n/crates&7 gui." and "" and "&eSlot: &f%{_slot}%" and "" and "&eItem: &f%{_item}%" and "" and "&eName: &f%{_name}%" and "" and "&eLore:" and {_lore::*} and "" and "&bLeft Click to edit the crate gui item."
 
+    # Reward Customization
+    set {_items} to size of {zcratemaker::crates::%{_crate}%::items::*}
+    set slot 14 of {_gui} to 1 of bone meal named "&eCrate Reward Customization" with lore "&8Zabrid's Crate Maker" and "" and "&7Edit the items this crate" and "&7rewards for opening it." and "" and "&eItem Amount: &f%{_items}%" and "" and "&bLeft click to modify crate rewards."
 
     open {_gui} to {_p}
+
+# Crate Key Edit GUI
+function zcratemaker_gui_editcratekey(p: player, crate: text):
+    {zcratemaker::crates::%{_crate}%} is set
+    set {_gui} to chest inventory named "&8Crate Key Edit | &6&l%{_crate}%" with 3 rows
+    set {_gui} to zcratemaker_bordergui({_gui}, 3, 1 of grey stained glass pane named "&8Zabrid's Crate Maker")
+
+    set slot 26 of {_gui} to 1 of birch door named "&cReturn to previous menu."
+
+    set {_item} to {zcratemaker::crates::%{_crate}%::cratekeyitem}
+    set slot 12 of {_gui} to 1 of {_item} named "&6Edit Crate Key Item" with lore "&8Zabrid's Crate Maker" and "" and "&7Edit the item of this crate key." and "" and "&eItem: &f%{_item}%" and "" and "&bLeft click to set the item to your held item."
+
+    open {_gui} to {_p}
+# Inventory Click
+on inventory click:
+    player has permission "zcratemaker.edit"
+    if name of player's current inventory contains "&8Zabrid's Crate Maker | &6&l":
+        cancel event
+        clicked inventory is player's current inventory
+        set {_crate} to name of player's current inventory
+        replace all "&8Zabrid's Crate Maker | &6&l" in {_crate} with ""
+        if index of clicked slot is 12:
+            zcratemaker_gui_editcratekey(player, {_crate})
