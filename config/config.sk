@@ -19,7 +19,7 @@ options:
   # GUI Customization
     gui [name]: "&6Crates" # Make sure this gui name is unique to any other GUIs
     gui [size]: 3
-    gui [fill-item]: 1 of black stained glass named "&6Crates" # set to `air` to disable
+    gui [fill-item]: 1 of black stained glass pane named "&6Crates" # set to `air` to disable
 
   # Reward Item Customization
     reward item [lore]: "" and "&7Chance: &b{chance}" and ""

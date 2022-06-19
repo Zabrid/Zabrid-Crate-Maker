@@ -11,6 +11,29 @@
 
 # ###################################################################
 
+# Main /crates GUI
+function zcratemaker_gui_main(p: player):
+    set {_uuid} to uuid of {_p}
+
+    set {_gui-name::*} to zcratemaker_getconfig("gui [name]")
+    set {_gui-size::*} to zcratemaker_getconfig("gui [size]")
+    set {_gui-fill::*} to zcratemaker_getconfig("gui [fill-item]")
+    set {_gui} to chest inventory named {_gui-name::1} with {_gui-size::1} rows
+    set slot (all integers between 0 and 54) of {_gui} to {_gui-fill::1}
+
+    loop {zcratemaker::crates::*}:
+        set {_crate} to loop-value
+        {zcratemaker::crates::%{_crate}%::guicrateshow} is true
+        set {_item} to {zcratemaker::crates::%{_crate}%::guicrateitem}
+        set {_slot} to {zcratemaker::crates::%{_crate}%::guicrateslot}
+        set {_name} to {zcratemaker::crates::%{_crate}%::guicratename}
+        set {_lore::*} to {zcratemaker::crates::%{_crate}%::guicratelore} split by "||"
+        replace all "{keys}" in {_lore::*} with "%{zcratemaker::virtualkeys::%{_uuid}%::%{_crate}%} ? 0%"
+        replace all "{keys}" in {_name} with "%{zcratemaker::virtualkeys::%{_uuid}%::%{_crate}%} ? 0%"
+        set slot {_slot} of {_gui} to 1 of {_item} named {_name} with lore {_lore::*}
+    
+    open {_gui} to {_p}
+
 # Edit GUI
 function zcratemaker_gui_edit(p: player, crate: text):
     {zcratemaker::crates::%{_crate}%} is set
@@ -59,11 +82,43 @@ function zcratemaker_gui_editcratekey(p: player, crate: text):
     set {_2lore::*} to {zcratemaker::crates::%{_crate}%::cratekeylore} split by "||"
     loop {_2lore::*}:
         set {_lore::%loop-index%} to "&6 - &f%loop-value%"
-    set slot 14 of {_gui} to 1 of wither rose with all flags hidden named "&6Edit Crate Key Name" with lore "&8Zabrid's Crate Maker" and "" and "&7Edit the lore of this crate key." and "" and "&eLore:" and {_lore::*} and "" and "&bLeft click to set the lore of the crate key."
+    set slot 14 of {_gui} to 1 of wither rose with all flags hidden named "&6Edit Crate Key Lore" with lore "&8Zabrid's Crate Maker" and "" and "&7Edit the lore of this crate key." and "" and "&eLore:" and {_lore::*} and "" and "&bLeft click to set the lore of the crate key."
 
     set slot 4 of {_gui} to 1 of {_item} named {_name} with lore {_2lore::*}
-    
+
     open {_gui} to {_p}
+
+function zcratemaker_gui_editcrategui(p: player, crate: text):
+    set {_gui} to chest inventory named "&8Crate Gui Edit | &6&l%{_crate}%" with 3 rows
+    set {_gui} to zcratemaker_bordergui({_gui}, 3, 1 of grey stained glass pane named "&8Zabrid's Crate Maker")
+
+    set slot 22 of {_gui} to 1 of birch door named "&cReturn to previous menu."
+
+    set {_item} to {zcratemaker::crates::%{_crate}%::guicrateitem}
+    set {_name} to {zcratemaker::crates::%{_crate}%::guicratename}
+    set {_slot} to {zcratemaker::crates::%{_crate}%::guicrateslot}
+    set {_lore::*} to {zcratemaker::crates::%{_crate}%::guicratelore} split by "||"
+    replace all "{keys}" in {_lore::*} with "0"
+    replace all "{keys}" in {_name} with "0"
+    set slot 4 of {_gui} to 1 of {_item} named {_name} with lore {_lore::*}
+
+    if {zcratemaker::crates::%{_crate}%::guicrateshow} is false:
+        set {_showitem} to red dye
+        set {_toggle} to "&cDisabled"
+    else:
+        set {_showitem} to lime dye
+        set {_toggle} to "&aEnabled"
+    set slot 11 of {_gui} to 1 of {_showitem} named "&6Toggle Crate Appearance" with lore "&8Zabrid's Crate Maker" and "" and "&7Toggle whether or not this crate" and "&7shows up in the &n/crates&7 menu." and "" and "&7Toggle: %{_toggle}%" and "" and "&bLeft click to toggle crate appearance."
+    set slot 12 of {_gui} to 1 of {_item} named "&6Edit Crate Gui Item" with lore "&8Zabrid's Crate Maker" and "" and "&7Edit the item of the crate gui." and "" and "&eItem: &f%{_item}%" and "" and "&bLeft click to set the item to your held item."
+    set slot 13 of {_gui} to 1 of empty map with all flags hidden named "&6Edit Crate Gui Name" with lore "&8Zabrid's Crate Maker" and "" and "&7Edit the name of the crate gui item." and "" and "&eName: &f%{_name}%" and "" and "&bLeft click to set the name of the crate gui item."
+    set {_lore::*} to {zcratemaker::crates::%{_crate}%::guicratelore} split by "||"
+    loop {_lore::*}:
+        set {_lore::%loop-index%} to "&6 - &f%loop-value%"
+    set slot 14 of {_gui} to 1 of wither rose with all flags hidden named "&6Edit Crate Gui Lore" with lore "&8Zabrid's Crate Maker" and "" and "&7Edit the lore of the crate gui item." and "" and "&eLore:" and {_lore::*} and "" and "&bLeft click to set the lore of the crate gui item."
+    set slot 15 of {_gui} to 1 of spyglass named "&6Edit Crate Gui Slot" with lore "&8Zabrid's Crate Maker" and "" and "&7Edit the slot of the crate gui item." and "" and "&eSlot: &f%{_slot}%" and "" and "&bLeft click to set the lore of the crate gui slot."
+
+    open {_gui} to {_p}
+
 # Inventory Click
 on inventory click:
     player has permission "zcratemaker.edit"
@@ -74,6 +129,8 @@ on inventory click:
         replace all "&8Zabrid's Crate Maker | &6&l" in {_crate} with ""
         if index of clicked slot is 12:
             zcratemaker_gui_editcratekey(player, {_crate})
+        else if index of clicked slot is 13:
+            zcratemaker_gui_editcrategui(player, {_crate})
     else if name of player's current inventory contains "&8Crate Key Edit | &6&l":
         cancel event
         clicked inventory is player's current inventory
@@ -98,3 +155,39 @@ on inventory click:
         else if index of clicked slot is 14:
             click action is left mouse button 
             zcratemaker_sendchatquery(player, {_crate}, "cratekeyedit-lore")
+    else if name of player's current inventory contains "&8Crate Gui Edit | &6&l":
+        cancel event
+        clicked inventory is player's current inventory
+        set {_crate} to name of player's current inventory
+        replace all "&8Crate Gui Edit | &6&l" in {_crate} with ""
+        if index of clicked slot is 22:
+            zcratemaker_gui_edit(player, {_crate})
+        else if index of clicked slot is 11:
+            click action is left mouse button
+            if {zcratemaker::crates::%{_crate}%::guicrateshow} is false:
+                set {zcratemaker::crates::%{_crate}%::guicrateshow} to true
+                send "&aYou have enabled %{_crate}%'s crate appearance."
+            else:
+                set {zcratemaker::crates::%{_crate}%::guicrateshow} to false
+                send "&cYou have disabled %{_crate}%'s crate appearance."
+            zcratemaker_gui_editcrategui(player, {_crate})
+        else if index of clicked slot is 12:
+            click action is left mouse button 
+            if player's tool's type is {zcratemaker::crates::%{_crate}%::guicrateitem}:
+                send "&cThe crate key item is already set to this."
+                stop
+            if player's tool is air:
+                send "&cYou cannot set the crate item to air."
+                stop
+            set {zcratemaker::crates::%{_crate}%::guicrateitem} to player's tool's type
+            send "&aYou have successfully updated the crate gui item of %{_crate}% to %{zcratemaker::crates::%{_crate}%::cratekeyitem}%"
+            zcratemaker_gui_editcrategui(player, {_crate})
+        else if index of clicked slot is 13:
+            click action is left mouse button 
+            zcratemaker_sendchatquery(player, {_crate}, "crateguiedit-name")
+        else if index of clicked slot is 14:
+            click action is left mouse button 
+            zcratemaker_sendchatquery(player, {_crate}, "crateguiedit-lore")
+        else if index of clicked slot is 15:
+            click action is left mouse button 
+            zcratemaker_sendchatquery(player, {_crate}, "crateguiedit-slot")

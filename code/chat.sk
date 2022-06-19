@@ -24,14 +24,14 @@ function zcratemaker_sendchatquery(p: player, crate: text, query: text):
         send "&c&l -> &7Type 'cancel' to cancel the change." to {_p}
         send "" to {_p}
         close {_p}'s inventory
-        set {zcmdmaker::changetime::%{_uuid}%} to now
+        set {zcratemaker::changetime::%{_uuid}%} to now
         set {_now} to now
         set {zcratemaker::changetype::%{_uuid}%} to {_query}
         set {zcratemaker::changeitem::%{_uuid}%} to {_crate}
         wait 40 seconds
         {zcratemaker::changetype::%{_uuid}%} is {_now}
         send "&cYour time to change the crate key name has run out." to {_p}
-        zcmdmaker_openeditgui({_p}, {_crate})
+        zcratemaker_gui_editcratekey({_p}, {_crate})
         delete {zcratemaker::changetime::%{_uuid}%} and {zcratemaker::changetype::%{_uuid}%} and {zcratemaker::changeitem::%{_uuid}%}
         stop
     else if {_query} is "cratekeyedit-lore":
@@ -47,17 +47,75 @@ function zcratemaker_sendchatquery(p: player, crate: text, query: text):
         send "&c&l -> &7Type 'cancel' to cancel the change." to {_p}
         send "" to {_p}
         close {_p}'s inventory
-        set {zcmdmaker::changetime::%{_uuid}%} to now
+        set {zcratemaker::changetime::%{_uuid}%} to now
         set {_now} to now
         set {zcratemaker::changetype::%{_uuid}%} to {_query}
         set {zcratemaker::changeitem::%{_uuid}%} to {_crate}
         wait 40 seconds
         {zcratemaker::changetype::%{_uuid}%} is {_now}
         send "&cYour time to change the crate key lore has run out." to {_p}
-        zcmdmaker_openeditgui({_p}, {_crate})
+        zcratemaker_gui_editcratekey({_p}, {_crate})
         delete {zcratemaker::changetime::%{_uuid}%} and {zcratemaker::changetype::%{_uuid}%} and {zcratemaker::changeitem::%{_uuid}%}
         stop
-
+    else if {_query} is "crateguiedit-name":
+        send "" to {_p}
+        send "&6Changing &6&l%{_crate}% Crate Gui Item's&6 Name" to {_p}
+        send "&6Type what you wish to set %{_crate}% crate gui item's name to." to {_p}
+        send "" to {_p}
+        send "&c&l -> &7Type 'cancel' to cancel the change." to {_p}
+        send "" to {_p}
+        close {_p}'s inventory
+        set {zcratemaker::changetime::%{_uuid}%} to now
+        set {_now} to now
+        set {zcratemaker::changetype::%{_uuid}%} to {_query}
+        set {zcratemaker::changeitem::%{_uuid}%} to {_crate}
+        wait 40 seconds
+        {zcratemaker::changetype::%{_uuid}%} is {_now}
+        send "&cYour time to change the crate gui item's name has run out." to {_p}
+        zcratemaker_gui_editcrategui({_p}, {_crate})
+        delete {zcratemaker::changetime::%{_uuid}%} and {zcratemaker::changetype::%{_uuid}%} and {zcratemaker::changeitem::%{_uuid}%}
+        stop
+    else if {_query} is "crateguiedit-lore":
+        send "" to {_p}
+        send "&6Changing &6&l%{_crate}% Crate Gui Item's&6 Lore" to {_p}
+        send "&6Type what you wish to set %{_crate}% Crate Gui Item's lore to." to {_p}
+        send "" to {_p}
+        send formatted "&6 -> &eTo create multiple lines use ""||"" to split the them. <suggest command:&aLore Line 1||&cLore Line 2||&bLore Line 3||&3Lore Line 4>&7(Example)" to {_p}
+        send "" to {_p}
+        set {_message} to {zcratemaker::crates::%{_crate}%::guicratelore}
+        send formatted "&b&l -> &7Copy what the lore is currently set to by clicking <suggest command:%{_message}%>&b&nHere" to {_p}
+        send "" to {_p}
+        send "&c&l -> &7Type 'cancel' to cancel the change." to {_p}
+        send "" to {_p}
+        close {_p}'s inventory
+        set {zcratemaker::changetime::%{_uuid}%} to now
+        set {_now} to now
+        set {zcratemaker::changetype::%{_uuid}%} to {_query}
+        set {zcratemaker::changeitem::%{_uuid}%} to {_crate}
+        wait 40 seconds
+        {zcratemaker::changetype::%{_uuid}%} is {_now}
+        send "&cYour time to change the crate gui item's lore has run out." to {_p}
+        zcratemaker_gui_editcrategui({_p}, {_crate})
+        delete {zcratemaker::changetime::%{_uuid}%} and {zcratemaker::changetype::%{_uuid}%} and {zcratemaker::changeitem::%{_uuid}%}
+        stop
+    else if {_query} is "crateguiedit-slot":
+        send "" to {_p}
+        send "&6Changing &6&l%{_crate}% Crate Gui Item's&6 Slot" to {_p}
+        send "&6Type what you wish to set %{_crate}% crate gui item's slot to." to {_p}
+        send "" to {_p}
+        send "&c&l -> &7Type 'cancel' to cancel the change." to {_p}
+        send "" to {_p}
+        close {_p}'s inventory
+        set {zcratemaker::changetime::%{_uuid}%} to now
+        set {_now} to now
+        set {zcratemaker::changetype::%{_uuid}%} to {_query}
+        set {zcratemaker::changeitem::%{_uuid}%} to {_crate}
+        wait 40 seconds
+        {zcratemaker::changetype::%{_uuid}%} is {_now}
+        send "&cYour time to change the crate gui item's slot has run out." to {_p}
+        zcratemaker_gui_editcrategui({_p}, {_crate})
+        delete {zcratemaker::changetime::%{_uuid}%} and {zcratemaker::changetype::%{_uuid}%} and {zcratemaker::changeitem::%{_uuid}%}
+        stop
 on chat:
     player has permission "zcratemaker.edit"
     set {_uuid} to uuid of player
@@ -103,3 +161,60 @@ on chat:
         send {_newlore::*}
         send ""
         zcratemaker_gui_editcratekey(player, {_crate})
+
+    else if {zcratemaker::changetype::%{_uuid}%} is "crateguiedit-name":
+        set {_crate} to {zcratemaker::changeitem::%{_uuid}%}
+        if message is "cancel":
+            zcratemaker_gui_editcrategui(player, {_crate})
+            delete {zcratemaker::changetime::%{_uuid}%} and {zcratemaker::changetype::%{_uuid}%} and {zcratemaker::changeitem::%{_uuid}%}
+            send "&cYou have cancelled the changing of the crate gui item's name."
+            stop
+        set {_oldname} to {zcratemaker::crates::%{_crate}%::guicratename}
+        set {zcratemaker::crates::%{_crate}%::guicratename} to colored message
+        delete {zcratemaker::changetime::%{_uuid}%} and {zcratemaker::changetype::%{_uuid}%} and {zcratemaker::changeitem::%{_uuid}%}
+        send "&aYou have successfully updated %{_crate}% Crate Gui Item's name:"
+        send "&6 -> &7""&f%{_oldname}%&7"" -> ""&f%colored message%&7""&7"
+        zcratemaker_gui_editcrategui(player, {_crate})
+
+    else if {zcratemaker::changetype::%{_uuid}%} is "crateguiedit-lore":
+        set {_crate} to {zcratemaker::changeitem::%{_uuid}%}
+        if message is "cancel":
+            zcratemaker_gui_editcrategui(player, {_crate})
+            delete {zcratemaker::changetime::%{_uuid}%} and {zcratemaker::changetype::%{_uuid}%} and {zcratemaker::changeitem::%{_uuid}%}
+            send "&cYou have cancelled the changing of the crate key item lore."
+            stop
+        set {_oldlore::*} to {zcratemaker::crates::%{_crate}%::guicratelore} split by "||"
+        loop {_oldlore::*}:
+            set {_oldlore::%loop-index%} to "&c - &f%loop-value%"
+        set {zcratemaker::crates::%{_crate}%::guicratelore} to colored message
+        set {_newlore::*} to {zcratemaker::crates::%{_crate}%::guicratelore} split by "||"
+        loop {_newlore::*}:
+            set {_newlore::%loop-index%} to "&a - &f%loop-value%"
+        delete {zcratemaker::changetime::%{_uuid}%} and {zcratemaker::changetype::%{_uuid}%} and {zcratemaker::changeitem::%{_uuid}%}
+        send "&aYou have successfully updated %{_crate}% Crate Gui Item's lore:"
+        send ""
+        send "&c&lOld Lore:"
+        send {_oldlore::*}
+        send ""
+        send "&a&lNew Lore:"
+        send {_newlore::*}
+        send ""
+        zcratemaker_gui_editcrategui(player, {_crate})
+
+    else if {zcratemaker::changetype::%{_uuid}%} is "crateguiedit-slot":
+        set {_crate} to {zcratemaker::changeitem::%{_uuid}%}
+        if message is "cancel":
+            zcratemaker_gui_editcrategui(player, {_crate})
+            delete {zcratemaker::changetime::%{_uuid}%} and {zcratemaker::changetype::%{_uuid}%} and {zcratemaker::changeitem::%{_uuid}%}
+            send "&cYou have cancelled the changing of the crate gui item's slot."
+            stop
+        set {_num} to message parsed as integer
+        if {_num} is not set:
+            send "&cThe slot can only be set to an integer."
+            stop
+        set {zcratemaker::crates::%{_crate}%::guicrateslot} to {_num}
+        delete {zcratemaker::changetime::%{_uuid}%} and {zcratemaker::changetype::%{_uuid}%} and {zcratemaker::changeitem::%{_uuid}%}
+        send "&aYou have successfully updated %{_crate}% Crate Gui Item's slot to %{zcratemaker::crates::%{_crate}%::guicrateslot}%"
+        zcratemaker_gui_editcrategui(player, {_crate})
+on load:
+    delete {zcratemaker::changetime::*} and {zcratemaker::changetype::*} and {zcratemaker::changeitem::*}

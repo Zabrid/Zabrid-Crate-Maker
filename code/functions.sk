@@ -33,7 +33,8 @@ function zcratemaker_createcrate(name: text) :: boolean: # Will return true if w
     set {zcratemaker::crates::%{_name}%::displayname} to "&6&l{name} Crate" # This is used for messages and broadcasts
 
     # Crate GUI Stuff
-    set {zcratemaker::crates::%{_name}%::guicrateitem} to tripwire hook
+    set {zcratemaker::crates::%{_name}%::guicrateshow} to false # Whether or not the crate will show up in /crates
+    set {zcratemaker::crates::%{_name}%::guicrateitem} to ender chest
     set {zcratemaker::crates::%{_name}%::guicrateslot} to 0
     set {zcratemaker::crates::%{_name}%::guicratename} to "&6%{_name}% Crate"  # This is used for the GUI item
     set {zcratemaker::crates::%{_name}%::guicratelore} to "||&7Keys: &e{keys}||||&bLeft click to open this crate||&bRight click to preview this crate||&bMiddle click to open all keys."

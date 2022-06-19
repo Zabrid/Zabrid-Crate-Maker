@@ -15,7 +15,10 @@ command /crates [<text>] [<text>] [<text>] [<text>]:
     aliases: /crate, /zcrates
     trigger:
         if arg 1 is not set:
-            # Empty
+            if player does not have permission "zcratemaker.menu":
+                send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
+                stop
+            zcratemaker_gui_main(player)
         
         else if arg 1 is "help":
             if player does not have permission "zcratemaker.help":
