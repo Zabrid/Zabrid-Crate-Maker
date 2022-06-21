@@ -28,8 +28,8 @@ function zcratemaker_gui_main(p: player):
         set {_slot} to {zcratemaker::crates::%{_crate}%::guicrateslot}
         set {_name} to {zcratemaker::crates::%{_crate}%::guicratename}
         set {_lore::*} to {zcratemaker::crates::%{_crate}%::guicratelore} split by "||"
-        replace all "{keys}" in {_lore::*} with "%{zcratemaker::virtualkeys::%{_uuid}%::%{_crate}%} ? 0%"
-        replace all "{keys}" in {_name} with "%{zcratemaker::virtualkeys::%{_uuid}%::%{_crate}%} ? 0%"
+        replace all "{keys}" in {_lore::*} with "%{zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} ? 0%"
+        replace all "{keys}" in {_name} with "%{zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} ? 0%"
         set slot {_slot} of {_gui} to 1 of {_item} named {_name} with lore {_lore::*}
     
     open {_gui} to {_p}

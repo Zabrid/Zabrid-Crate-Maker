@@ -11,11 +11,11 @@
 
 # ###################################################################
 
-command /crates [<text>] [<text>] [<text>] [<text>]:
+command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
     aliases: /crate, /zcrates
     trigger:
         if arg 1 is not set:
-            if player does not have permission "zcratemaker.menu":
+            if player does not have permission "zcratemaker.gui":
                 send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
                 stop
             zcratemaker_gui_main(player)
@@ -125,6 +125,47 @@ command /crates [<text>] [<text>] [<text>] [<text>]:
             loop {zcratemaker::crates::*}:
                 send formatted "&6 -> &e%loop-index% crate &8- <suggest command:/crates edit %loop-index%>&e(Edit)<suggest command:/crates delete %loop-index%> &4(Delete)"
             send ""
+        
+        else if arg 1 is "give":
+            if player has permission "zcratemaker.give":
+                set {_allow} to true
+            if sender is console:
+                set {_allow} to true
+            if {_allow} is not set:
+                send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
+                stop
+            if arg 2 is not set:
+                send "&cYou must specify a player to give the crate to."
+                send "&8 -> &e/crate give <player> <crate> <type> <amt?1>"
+                stop
+            set {_p} to arg 2 parsed as offline player
+            if {_p} is not online:
+                send "&cThe player you specified is not online."
+                stop
+            if arg 3 is not set:
+                send "&cYou must specify the crate to give to %{_p}%"
+                send "&8 -> &e/crate give <player> <crate> <type> <amt?1>"
+                stop
+            set {_list::*} to {zcratemaker::crates::*}
+            if {_list::*} does not contain arg 3:
+                send "&cThe crate you specified does not seem to exist."
+                stop
+            if arg 4 is not set:
+                send "&cYou must specify whether or not you're giving a virtual or a physical crate."
+                send "&8 -> &e/crate give <player> <crate> <type=v,p,virtual,physical> <amt?1>"
+                stop
+            if arg 4 is not "v" or "p" or "physical" or "virtual":
+                send "&cThe crate type you specified is invalid"
+                send "&8 -> &eValid Types: V, P, Virtual, Physical"
+                stop
+            set {_amt} to ( arg 5 ? 1 ) parsed as integer
+            if arg 4 is "p" or "physical":
+                set {_item} to zcratemaker_generatekey(arg 3)
+                add {_amt} of {_item} to {_p}'s inventory
+                send "&aYou have given %{_p}% a physical %arg 3% crate key."
+            if arg 4 is "v" or "virtual":
+                zcratemaker_givekey(player, arg 3, {_amt})
+                send "&aYou have given %{_p}% a virtual %arg 3% crate key."
 
         else:
             set {_message::*} to zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("argument-not-recognized")) 

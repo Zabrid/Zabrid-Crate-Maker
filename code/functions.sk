@@ -48,13 +48,25 @@ function zcratemaker_createcrate(name: text) :: boolean: # Will return true if w
 
     return true
 
+function zcratemaker_givekey(p: player, name: text, amt: integer):
+    {zcratemaker::crates::%{_name}%} is set
+    set {_uuid} to uuid of {_p}
+    set {zcratemaker::crates::keys::%{_name}%::%{_uuid}%} to ( {zcratemaker::crates::keys::%{_name}%::%{_uuid}%} ? 0 ) + {_amt}
+    broadcast {zcratemaker::crates::keys::%{_name}%::%{_uuid}%}
+
+function zcratemaker_generatekey(name: text) :: item:
+    {zcratemaker::crates::%{_name}%} is set
+    set {_item} to 1 of {zcratemaker::crates::%{_name}%::cratekeyitem}
+    set {_name1} to {zcratemaker::crates::%{_name}%::cratekeyname}
+    set {_lore::*} to {zcratemaker::crates::%{_name}%::cratekeylore} split by "||"
+    set {_item} to 1 of {_item} named {_name1} with lore {_lore::*} with nbt "{zcratemakerkey:""%{_name}%""}"
+    return {_item}
 
 function zcratemaker_deletecrate(name: text) :: boolean:
     if {zcratemaker::crates::%{_name}%} is not set:
         return false
-    delete {zcratemaker::crates::%{_name}%::*} and {zcratemaker::crates::%{_name}%} and {zcratemaker::crates::%{_name}%::items::*}
+    delete {zcratemaker::crates::%{_name}%::*} and {zcratemaker::crates::%{_name}%} and {zcratemaker::crates::%{_name}%::items::*} and {zcratemaker::crates::keys::%{_name}%::*}
     return true
-
 
 function zcratemaker_additem(name: text, chance: number, item: item) :: boolean:
     if {zcratemaker::crates::%{_name}%} is not set:
