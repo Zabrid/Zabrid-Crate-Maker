@@ -30,8 +30,6 @@ function zcratemaker_createcrate(name: text) :: boolean: # Will return true if w
         return false
     set {zcratemaker::crates::%{_name}%} to {_name}
 
-    set {zcratemaker::crates::%{_name}%::displayname} to "&6&l{name} Crate" # This is used for messages and broadcasts
-
     # Crate GUI Stuff
     set {zcratemaker::crates::%{_name}%::guicrateshow} to false # Whether or not the crate will show up in /crates
     set {zcratemaker::crates::%{_name}%::guicrateitem} to ender chest
@@ -44,7 +42,7 @@ function zcratemaker_createcrate(name: text) :: boolean: # Will return true if w
     set {zcratemaker::crates::%{_name}%::cratekeyname} to "&6%{_name}% Key"
     set {zcratemaker::crates::%{_name}%::cratekeylore} to "&bRight click the %{_name}% crate to open."
 
-    add 1 of stone shovel named "&eExample Item" with nbt "{zcratemakerchance:100,zcratemakeritemid:""%zcratemaker_genrandomstring(50)%""}" to {zcratemaker::crates::%{_name}%::items::*}
+    add 1 of stone shovel named "&eExample Item" to {zcratemaker::crates::%{_name}%::items::*}
 
     return true
 

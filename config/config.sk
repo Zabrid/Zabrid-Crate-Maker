@@ -16,13 +16,18 @@ options:
 
     prefix: "&7[&6Crates&7]"
     
-  # GUI Customization
+  # Main GUI Customization
     gui [name]: "&6Crates" # Make sure this gui name is unique to any other GUIs
     gui [size]: 3
     gui [fill-item]: 1 of black stained glass pane named "&6Crates" # set to `air` to disable
 
-  # Reward Item Customization
-    reward item [lore]: "" and "&7Chance: &b{chance}" and ""
+  # Preview GUI Customization
+    preview [name]: "&6Previewing Crate"
+    preview [size]: 6
+    preview [fill-item]: 1 of black stained glass pane named "&7" # set to `air` to disable
+
+    preview [back-slot]: 53
+    preview [back-item]: 1 of birch door named "&cReturn to previous menu." with lore "&7Click to return to the previous menu."
 
 
 
@@ -39,11 +44,22 @@ options:
 function zcratemaker_getconfig(t: text) :: objects:
     if {_t} is "prefix":
         return {@prefix}
+
     else if {_t} is "gui [name]":
         return {@gui [name]}
     else if {_t} is "gui [size]":
         return {@gui [size]}
     else if {_t} is "gui [fill-item]":
         return {@gui [fill-item]}
-    else if {_t} is "reward item [lore]":
-        return {@reward item [lore]}
+
+    else if {_t} is "preview [name]":
+        return {@preview [name]}
+    else if {_t} is "preview [size]":
+        return {@preview [size]}
+    else if {_t} is "preview [fill-item]":
+        return {@preview [fill-item]}
+    
+    else if {_t} is "preview [back-slot]":
+        return {@preview [back-slot]}
+    else if {_t} is "preview [back-item]":
+        return {@preview [back-item]}
