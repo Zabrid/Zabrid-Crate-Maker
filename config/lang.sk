@@ -16,7 +16,14 @@ options:
 
     message [no-perms]: "{prefix} &cYou do not have the required permissions to use this command."
     message [argument-not-recognized]: "&fThe argument you specified &3""{argument}""&f is not known." and "&eFor a list of valid arguments use &n/crates help&e."
+    
+    # {reward} = Name of the reward
+    # {crate} = Name of the crate (Uses name of the GUI item)
+    # {prefix} = The prefix (duh)
+    # {player} = The name of the player
+    message [reward]: "{prefix} &7You have recieved {reward}&7 from the {crate}&7!"
 
+    message [not-enough-keys]: "{prefix} &7You do not have any crate keys to open."
 
 
 
@@ -34,3 +41,7 @@ function zcratemaker_getlang(t: text) :: objects:
         return {@message [no-perms]}
     else if {_t} is "argument-not-recognized":
         return {@message [argument-not-recognized]}
+    else if {_t} is "reward":
+        return {@message [reward]}
+    else if {_t} is "not-enough-keys":
+        return {@message [not-enough-keys]}

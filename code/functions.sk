@@ -42,7 +42,7 @@ function zcratemaker_createcrate(name: text) :: boolean: # Will return true if w
     set {zcratemaker::crates::%{_name}%::cratekeyname} to "&6%{_name}% Key"
     set {zcratemaker::crates::%{_name}%::cratekeylore} to "&bRight click the %{_name}% crate to open."
 
-    add 1 of stone shovel named "&eExample Item" to {zcratemaker::crates::%{_name}%::items::*}
+    add 1 of stone shovel named "&eExample Item" with nbt "{zcratemaker-chance:1}" to {zcratemaker::crates::%{_name}%::items::*}
 
     return true
 
@@ -50,7 +50,6 @@ function zcratemaker_givekey(p: player, name: text, amt: integer):
     {zcratemaker::crates::%{_name}%} is set
     set {_uuid} to uuid of {_p}
     set {zcratemaker::crates::keys::%{_name}%::%{_uuid}%} to ( {zcratemaker::crates::keys::%{_name}%::%{_uuid}%} ? 0 ) + {_amt}
-    broadcast {zcratemaker::crates::keys::%{_name}%::%{_uuid}%}
 
 function zcratemaker_generatekey(name: text) :: item:
     {zcratemaker::crates::%{_name}%} is set
@@ -66,13 +65,46 @@ function zcratemaker_deletecrate(name: text) :: boolean:
     delete {zcratemaker::crates::%{_name}%::*} and {zcratemaker::crates::%{_name}%} and {zcratemaker::crates::%{_name}%::items::*} and {zcratemaker::crates::keys::%{_name}%::*}
     return true
 
-function zcratemaker_additem(name: text, chance: number, item: item) :: boolean:
-    if {zcratemaker::crates::%{_name}%} is not set:
-        return false
-    add {_item} with nbt "{zcratemakerchance:%{_chance}%,zcratemakeritemid:""%zcratemaker_genrandomstring(50)%""}" to {zcratemaker::crates::%{_name}%::items::*}
-    return true
-
 function zcratemaker_formatbasicmessage(sender: text, t: objects) :: texts:
     replace all "{prefix}" in {_t::*} with "%zcratemaker_getconfig("prefix")%"
     replace all "{player}" in {_t::*} with {_sender}
     return {_t::*}
+
+function zcratemaker_opencrate(p: player, name: text):# Thanks Sovde#0001 for the chance idea
+    {zcratemaker::crates::%{_name}%} is set
+    set {_maxchance} to 0
+    loop {zcratemaker::crates::%{_name}%::items::*}:
+        set {_minchance::%loop-index%} to {_maxchance}
+        set {_chance} to "zcratemaker-chance" tag of loop-value's nbt
+        add {_chance} to {_maxchance}
+        set {_maxchance::%loop-index%} to {_maxchance}
+    set {_num} to a random number between 0 and {_maxchance}
+    loop {zcratemaker::crates::%{_name}%::items::*}:
+        {_num} is between {_minchance::%loop-index%} and {_maxchance::%loop-index%}
+
+        set {_reward} to loop-value-1's name ? "%loop-value's type%"
+        set {_crate} to {zcratemaker::crates::%{_name}%::guicratename}
+        set {_prefix} to "%zcratemaker_getconfig("prefix")%"
+
+        set {_command} to "zcratemaker-command" tag of loop-value's nbt
+        if {_command} is set:
+            set {_commands::*} to {_command} split by "||"
+            loop {_commands::*}:
+                set {_cmd} to loop-value-2
+                replace all "{player}" and "{p}" in {_cmd} with "%{_p}%"
+                execute console command {_cmd}
+        
+        else: 
+            set {_item} to loop-value-1
+            set {_nbt} to nbt compound of loop-value
+            delete tag "tag;zcratemaker-chance" of {_nbt}
+            set {_item} to item from nbt {_nbt}
+            add {_item} to {_p}'s inventory
+
+        set {_message::*} to zcratemaker_getlang("reward")
+        replace all "{prefix}" in {_message::*} with {_prefix}
+        replace all "{reward}" in {_message::*} with {_reward}
+        replace all "{crate}" in {_message::*} with {_crate}
+        replace all "{player}" and "{p}" in {_message::*} with {_player}
+        send formatted {_message::*} to {_p}
+        stop

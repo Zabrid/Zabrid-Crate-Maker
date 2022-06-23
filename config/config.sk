@@ -26,6 +26,8 @@ options:
     preview [size]: 6
     preview [fill-item]: 1 of black stained glass pane named "&7" # set to `air` to disable
 
+    preview [reward-item-lore]: "" and "&8 -> &7Chance: &6{chance}%%" and ""
+
     preview [back-slot]: 53
     preview [back-item]: 1 of birch door named "&cReturn to previous menu." with lore "&7Click to return to the previous menu."
 
@@ -63,3 +65,8 @@ function zcratemaker_getconfig(t: text) :: objects:
         return {@preview [back-slot]}
     else if {_t} is "preview [back-item]":
         return {@preview [back-item]}
+    else if {_t} is "preview [reward-item-lore]":
+        return {@preview [reward-item-lore]}
+    
+    else:
+        return "Invalid value specified."

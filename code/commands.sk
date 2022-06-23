@@ -38,7 +38,7 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
             send "&6 -> &e/crate setcrate <name> &7&o(zcratemaker.setcrate)"
             send "&6 -> &e/crate give <player> <crate> <type> <amt?1> &7&o(zcratemaker.give)"
             send "&6 -> &e/crate giveall <crate> <type> <amt?1> &7&o(zcratemaker.giveall)"
-            send "&6 -> &e/crate take <player> <crate> <amt?1> &7&o(zcratemaker.take)"
+            send "&8 -> &e/crate additem <crate> <type=item,command> <chance> <command(s)> &7&o(zcratemaker.additem)"
             send ""
 
         else if arg 1 is "create":
@@ -166,6 +166,57 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
             if arg 4 is "v" or "virtual":
                 zcratemaker_givekey(player, arg 3, {_amt})
                 send "&aYou have given %{_p}% a virtual %arg 3% crate key."
+        
+        else if arg 1 is "additem":
+            set {_chance} to arg 4 parsed as number
+            if player does not have permission "zcratemaker.additem":
+                send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
+                stop
+            if arg 2 is not set:
+                send "&cYou must specify the crate to add your held item to."
+                send "&8 -> &e/crate additem <crate> <type=item,command> <chance> <command(s)>"
+                stop
+            if {zcratemaker::crates::%arg 2%} is not set:
+                send "&cThe crate you specified does not seem to exist."
+                stop
+            if player's tool is air:
+                send "&cYou're not holding an item in your hand."
+                stop
+            if arg 3 is not set:
+                send "&cYou must specify the type of the item you're adding."
+                send "&8 -> &eValid Types: &6Item, Command"
+                send "&8 -> &e/crate additem <crate> <type=item,command> <chance> <command(s)>"
+                stop
+            if arg 3 is not "item" or "command" or "i" or "c":
+                send "&cThe type you specified is not valid."
+                send "&8 -> &eValid Types: &6Item, Command"
+                stop
+            if arg 4 is not set:
+                send "&cYou must specify the chance you want a player to have of recieving this item."
+                send "&8 -> &e/crate additem <crate> <type=item,command> <chance> <command(s)>"
+                stop
+            if {_chance} is not set:
+                send "&cThe chance you specified is not a number."
+                stop
+            if arg 3 is "item" or "i":
+                add player's tool with nbt "{zcratemaker-chance:%{_chance}%}" to {zcratemaker::crates::%arg 2%::items::*}
+                send "&aYou have added &2%player's tool%&a to the %arg 2% crate."
+                stop
+            if arg 3 is "command" or "c":
+                if arg 5 is not set:
+                    send "&cYou must specify the commands. You can create seperate commands by seperating them with ""||""."
+                    send "&7These commands will be run by console, you can use &6{p}&7 or &6{player}&7 to specify the player."
+                    send "&8 -> &e/crate additem %arg 2% command <commands>"
+                    stop
+                set {_commands::*} to arg 5 split by "||"
+                add player's tool with nbt "{zcratemaker-command:""%arg 5%"",zcratemaker-chance:%{_chance}%}" to {zcratemaker::crates::%arg 2%::items::*}
+                send "&aYou have added &2%player's tool%&a to the %arg 2% crate."
+                send ""
+                send "&a&lCommands:"
+                loop {_commands::*}:
+                    send "&a - &7%loop-value%"
+                send ""
+                stop
 
         else:
             set {_message::*} to zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("argument-not-recognized")) 

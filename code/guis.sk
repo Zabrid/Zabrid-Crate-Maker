@@ -35,7 +35,7 @@ function zcratemaker_gui_main(p: player):
     open {_gui} to {_p}
 
 # Preview Crate GUI
-function zcratemaker_gui_preview(p: player, crate: text):
+function zcratemaker_gui_preview(p: player, crate: text, type: text):
     {zcratemaker::crates::%{_crate}%} is set
 
     set {_gui-name::*} to zcratemaker_getconfig("preview [name]")
@@ -44,15 +44,20 @@ function zcratemaker_gui_preview(p: player, crate: text):
     set {_gui} to chest inventory named {_gui-name::1} with {_gui-size::1} rows
     set slot (all integers between 0 and 54) of {_gui} to {_gui-fill::1}
 
-    set {_back-slot::*} to zcratemaker_getconfig("preview [back-slot]")
-    set {_back-item::*} to zcratemaker_getconfig("preview [back-item]")
-
-    set slot {_back-slot::1} of {_gui} to {_back-item::1}
+    if {_type} is "main":
+        set {_back-slot::*} to zcratemaker_getconfig("preview [back-slot]")
+        set {_back-item::*} to zcratemaker_getconfig("preview [back-item]")
+        set slot {_back-slot::1} of {_gui} to {_back-item::1} with nbt "{backbutton:1}"
 
     set {_slot} to -1
     loop {zcratemaker::crates::%{_crate}%::items::*}:
         add 1 to {_slot}
-        set slot {_slot} of {_gui} to loop-value with nbt "{zcratemakercrate:""%loop-value%""}"
+
+        set {_chance} to tag "zcratemaker-chance" of loop-value's nbt
+        set {_lore::*} to zcratemaker_getconfig("preview [reward-item-lore]")
+        replace all "{chance}" in {_lore::*} with "%{_chance}%"
+
+        set slot {_slot} of {_gui} to loop-value with lore {_lore::*}
 
     open {_gui} to {_p}
 
@@ -144,24 +149,59 @@ function zcratemaker_gui_editcrategui(p: player, crate: text):
 # Inventory Click
 on inventory click:
     set {_gui-name::*} to zcratemaker_getconfig("gui [name]")
+    set {_uuid} to player's uuid
     if name of player's current inventory is {_gui-name::1}:
         cancel event
         clicked inventory is player's current inventory
         loop {zcratemaker::crates::*}:
             set {_slot} to {zcratemaker::crates::%loop-value%::guicrateslot}
+            set {_crate} to loop-value
             if index of clicked slot is {_slot}:
                 if click action is left mouse button:
-                    # Open Crate
+                    if {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} is greater than 0:
+                        subtract 1 from {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
+                        if {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} is 0:
+                            delete {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
+                        zcratemaker_opencrate(player, {_crate})
+                    else:
+                        set {_message::*} to zcratemaker_getlang("not-enough-keys")
+
+                        set {_reward} to loop-value-1's name
+                        set {_crate} to {zcratemaker::crates::%{_crate}%::guicratename}
+                        set {_prefix} to "%zcratemaker_getconfig("prefix")%"
+
+                        replace all "{prefix}" in {_message::*} with {_prefix}
+                        replace all "{crate}" in {_message::*} with {_crate}
+                        replace all "{player}" and "{p}" in {_message::*} with "%player%"
+                        send {_message::*} to player
                 else if click action is right mouse button:
-                    zcratemaker_gui_preview(player, loop-value)
+                    zcratemaker_gui_preview(player, loop-value, "main")
                 else if click action is middle mouse button:
-                    # Open all crates
+                    if {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} is greater than 0:
+                        loop {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} times:
+                            subtract 1 from {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
+                            if {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} is 0:
+                                delete {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
+                            zcratemaker_opencrate(player, {_crate})
+                    else:
+                        set {_message::*} to zcratemaker_getlang("not-enough-keys")
+
+                        set {_reward} to loop-value-1's name
+                        set {_crate} to {zcratemaker::crates::%{_crate}%::guicratename}
+                        set {_prefix} to "%zcratemaker_getconfig("prefix")%"
+
+                        replace all "{prefix}" in {_message::*} with {_prefix}
+                        replace all "{crate}" in {_message::*} with {_crate}
+                        replace all "{player}" and "{p}" in {_message::*} with "%player%"
+                        send {_message::*} to player
     set {_gui-name::*} to zcratemaker_getconfig("preview [name]")
     if name of player's current inventory is {_gui-name::1}:
         cancel event
         clicked inventory is player's current inventory
         set {_back-slot::*} to zcratemaker_getconfig("preview [back-slot]")
         if index of clicked slot is {_back-slot::1}:
+            set {_back} to tag "backbutton" of clicked slot's nbt
+            {_back} is set
             zcratemaker_gui_main(player)
 
 
