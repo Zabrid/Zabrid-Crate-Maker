@@ -28,8 +28,6 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
             send "&e&lCrate Maker"
             send "&7 Author(s): &e{zabrid}##3433"
             send ""
-            send "&7&o (( Hover for more information about commands ))"
-            send ""
             send "&6 -> &e/crate &7&o(zcratemaker.gui)"
             send "&6 -> &e/crate list &7&o(zcratemaker.list)"
             send "&6 -> &e/crate create <name> &7&o(zcratemaker.create)"
@@ -125,7 +123,42 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
             loop {zcratemaker::crates::*}:
                 send formatted "&6 -> &e%loop-index% crate &8- <suggest command:/crates edit %loop-index%>&e(Edit)<suggest command:/crates delete %loop-index%> &4(Delete)"
             send ""
-        
+
+        else if arg 1 is "giveall":
+            if player has permission "zcratemaker.give":
+                set {_allow} to true
+            if sender is console:
+                set {_allow} to true
+            if {_allow} is not set:
+                send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
+                stop
+            if arg 2 is not set:
+                send "&cYou must specify the crate to give to everyone"
+                send "&8 -> &e/crate giveall <crate> <type> <amt?1>"
+                stop
+            set {_list::*} to {zcratemaker::crates::*}
+            if {_list::*} does not contain arg 2:
+                send "&cThe crate you specified does not seem to exist."
+                stop
+            if arg 3 is not set:
+                send "&cYou must specify whether or not you're giving a virtual or a physical crate."
+                send "&8 -> &e/crate give <player> <crate> <type=v,p,virtual,physical> <amt?1>"
+                stop
+            if arg 3 is not "v" or "p" or "physical" or "virtual":
+                send "&cThe crate type you specified is invalid"
+                send "&8 -> &eValid Types: V, P, Virtual, Physical"
+                stop
+            set {_amt} to ( arg 4 ? 1 ) parsed as integer
+            if arg 3 is "p" or "physical":
+                set {_item} to zcratemaker_generatekey(arg 2)
+                loop all players:
+                    add {_amt} of {_item} to loop-player's inventory
+                send "&aYou have given everyone %{_amt}% physical %arg 2% crate key(s)."
+            if arg 3 is "v" or "virtual":
+                loop all players:
+                    zcratemaker_givekey(loop-player, arg 2, {_amt})
+                send "&aYou have given everyone %{_amt}% virtual %arg 2% crate key(s)."
+
         else if arg 1 is "give":
             if player has permission "zcratemaker.give":
                 set {_allow} to true
@@ -162,10 +195,10 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
             if arg 4 is "p" or "physical":
                 set {_item} to zcratemaker_generatekey(arg 3)
                 add {_amt} of {_item} to {_p}'s inventory
-                send "&aYou have given %{_p}% a physical %arg 3% crate key."
+                send "&aYou have given %{_p}% %{_amt}% physical %arg 3% crate key(s)."
             if arg 4 is "v" or "virtual":
                 zcratemaker_givekey(player, arg 3, {_amt})
-                send "&aYou have given %{_p}% a virtual %arg 3% crate key."
+                send "&aYou have given %{_p}% %{_amt}% virtual %arg 3% crate key(s)."
         
         else if arg 1 is "additem":
             set {_chance} to arg 4 parsed as number
