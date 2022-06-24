@@ -21,8 +21,8 @@ options:
     # {crate} = Name of the crate (Uses name of the GUI item)
     # {prefix} = The prefix (duh)
     # {player} = The name of the player
-    message [reward]: "{prefix} &7You have recieved {reward}&7 from the {crate}&7!"
-
+    message [reward]: "{prefix} &7You have recieved &6{reward}&7 from the {crate}&7!"
+    message [need-key]: "{prefix} &7You need to be holding a &6{crate} Key&7 to open this crate."
     message [not-enough-keys]: "{prefix} &7You do not have any crate keys to open."
 
 
@@ -45,3 +45,8 @@ function zcratemaker_getlang(t: text) :: objects:
         return {@message [reward]}
     else if {_t} is "not-enough-keys":
         return {@message [not-enough-keys]}
+    else if {_t} is "need-key":
+        return {@message [need-key]}
+
+function zcratemaker_reloadlang():
+    execute console command "sk reload %script%"

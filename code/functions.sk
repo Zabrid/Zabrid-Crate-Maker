@@ -108,3 +108,37 @@ function zcratemaker_opencrate(p: player, name: text):# Thanks Sovde#0001 for th
         replace all "{player}" and "{p}" in {_message::*} with {_player}
         send formatted {_message::*} to {_p}
         stop
+
+on right click:
+    #send "debug"
+    set {_tag} to tag "zcratemaker-crate" of nbt compound of event-block
+    #send "%nbt compound of event-block%"
+    #send "%event-block%"
+    #send "%{_tag}%"
+    {_tag} is set
+    cancel event
+    set {_key} to "zcratemakerkey" tag of player's tool's nbt
+    if {_key} is not {_tag}:
+
+        set {_item} to {zcratemaker::crates::%{_tag}%::guicrateitem}
+        set {_name} to {zcratemaker::crates::%{_tag}%::guicratename}
+        set {_prefix} to "%zcratemaker_getconfig("prefix")%"
+
+        set {_message::*} to zcratemaker_getlang("need-key")
+        replace all "{prefix}" in {_message::*} with {_prefix}
+        replace all "{crate}" in {_message::*} with {_name}
+        replace all "{player}" and "{p}" in {_message::*} with "%player%"
+        send formatted {_message::*} to player
+        stop
+    remove 1 of player's tool from player's inventory
+    zcratemaker_opencrate(player, {_tag})
+
+on left click:
+    set {_tag} to tag "zcratemaker-crate" of nbt compound of event-block
+    {_tag} is set
+    if player has permission "zcratemaker.setcrate":
+        player is sneaking
+        set {_break} to true
+    {_break} is not set
+    cancel event
+    zcratemaker_gui_preview(player, {_tag}, "null")

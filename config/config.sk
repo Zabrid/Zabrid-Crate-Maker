@@ -70,3 +70,6 @@ function zcratemaker_getconfig(t: text) :: objects:
     
     else:
         return "Invalid value specified."
+
+function zcratemaker_reloadconfig():
+    execute console command "sk reload %script%"

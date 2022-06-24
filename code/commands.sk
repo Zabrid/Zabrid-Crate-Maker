@@ -218,6 +218,28 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
                 send ""
                 stop
 
+        else if arg 1 is "setcrate":
+            if player does not have permission "zcratemaker.setcrate":   
+                send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
+                stop
+            if arg 2 is not set:
+                send "&cYou must specify the crate you want to set the block to."
+                send "&8 -> &e/crate setcrate <name>"
+                stop 
+            if {zcratemaker::crates::%arg 2%} is not set:
+                send "&cThe crate you specified does not seem to exist."
+                stop
+            set {_tloc} to location of player's target block
+            set {_ploc} to player's location
+            if player's target block is not set:
+                send "&cThe block you're looking at is too far away."
+                stop
+            if distance between {_tloc} and {_ploc} is greater than 6:
+                send "&cThe block you're looking at is too far away."
+                stop
+            set tag "zcratemaker-crate" of nbt compound of block at {_tloc} to arg 2
+            send "&aYou've set a &n%player's target block's type%&a at &n%location of player's target block%&a to a &n%arg 2% Crate&a"
+
         else:
             set {_message::*} to zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("argument-not-recognized")) 
             replace all "{argument}" in {_message::*} with arg 1
