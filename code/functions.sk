@@ -110,11 +110,7 @@ function zcratemaker_opencrate(p: player, name: text):# Thanks Sovde#0001 for th
         stop
 
 on right click:
-    #send "debug"
-    set {_tag} to tag "zcratemaker-crate" of nbt compound of event-block
-    #send "%nbt compound of event-block%"
-    #send "%event-block%"
-    #send "%{_tag}%"
+    set {_tag} to {zcratemaker::cratelocations::%location of event-block%}
     {_tag} is set
     cancel event
     set {_key} to "zcratemakerkey" tag of player's tool's nbt
@@ -134,10 +130,11 @@ on right click:
     zcratemaker_opencrate(player, {_tag})
 
 on left click:
-    set {_tag} to tag "zcratemaker-crate" of nbt compound of event-block
+    set {_tag} to {zcratemaker::cratelocations::%location of event-block%}
     {_tag} is set
     if player has permission "zcratemaker.setcrate":
         player is sneaking
+        delete {zcratemaker::cratelocations::%location of event-block%}
         set {_break} to true
     {_break} is not set
     cancel event

@@ -237,7 +237,7 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
             if distance between {_tloc} and {_ploc} is greater than 6:
                 send "&cThe block you're looking at is too far away."
                 stop
-            set tag "zcratemaker-crate" of nbt compound of block at {_tloc} to arg 2
+            set {zcratemaker::cratelocations::%location of player's target block%} to arg 2
             send "&aYou've set a &n%player's target block's type%&a at &n%location of player's target block%&a to a &n%arg 2% Crate&a"
 
         else:

@@ -115,7 +115,33 @@ function zcratemaker_gui_editcratekey(p: player, crate: text):
 
     open {_gui} to {_p}
 
+function zcratemaker_gui_itemeditor(p: player, crate: text):
+    {zcratemaker::crates::%{_crate}%} is set
+    set {_gui} to chest inventory named "&8Crate Item Editor | &6&l%{_crate}%" with 6 rows
+
+    set slot 45 of {_gui} to 1 of birch door named "&cReturn to previous menu."
+    
+    set {_slot} to -1
+    loop {zcratemaker::crates::%{_crate}%::items::*}:
+        add 1 to {_slot}
+
+        set {_chance} to tag "zcratemaker-chance" of loop-value-1's nbt
+        set {_commands} to tag "zcratemaker-command" of loop-value-1's nbt
+        set {_commands::*} to {_commands} split by "||"
+        set {_lore::*} to zcratemaker_getconfig("preview [reward-item-lore]")
+        replace all "{chance}" in {_lore::*} with "%{_chance}%"
+        if {_commands::*} is set:
+            loop {_commands::*}:
+                set {_commands::%loop-index-2%} to "&6 - &f/%loop-value-2%"
+            set slot {_slot} of {_gui} to loop-value with lore {_lore::*} and "&8-------------------------------------" and "" and "&6Commands:" and {_commands::*} and "" and "&8-------------------------------------" and "&bClick to remove this item from the crate."
+
+        else:
+            set slot {_slot} of {_gui} to loop-value with lore {_lore::*} and "&8-------------------------------------" and "&bClick to remove this item from the crate."
+
+    open {_gui} to {_p}
+
 function zcratemaker_gui_editcrategui(p: player, crate: text):
+    {zcratemaker::crates::%{_crate}%} is set
     set {_gui} to chest inventory named "&8Crate Gui Edit | &6&l%{_crate}%" with 3 rows
     set {_gui} to zcratemaker_bordergui({_gui}, 3, 1 of grey stained glass pane named "&8Zabrid's Crate Maker")
 
@@ -177,6 +203,9 @@ on inventory click:
                 else if click action is right mouse button:
                     zcratemaker_gui_preview(player, loop-value, "main")
                 else if click action is middle mouse button:
+                    if player does not have permission "zcratemaker.openall":
+                        send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
+                        stop      
                     if {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} is greater than 0:
                         loop {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} times:
                             subtract 1 from {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
@@ -215,6 +244,8 @@ on inventory click:
             zcratemaker_gui_editcratekey(player, {_crate})
         else if index of clicked slot is 13:
             zcratemaker_gui_editcrategui(player, {_crate})
+        else if index of clicked slot is 14:
+            zcratemaker_gui_itemeditor(player, {_crate})
     else if name of player's current inventory contains "&8Crate Key Edit | &6&l":
         cancel event
         clicked inventory is player's current inventory
@@ -239,6 +270,24 @@ on inventory click:
         else if index of clicked slot is 14:
             click action is left mouse button 
             zcratemaker_sendchatquery(player, {_crate}, "cratekeyedit-lore")
+    else if name of player's current inventory contains "&8Crate Item Editor | &6&l":
+        cancel event
+        clicked inventory is player's current inventory
+        set {_crate} to name of player's current inventory
+        replace all "&8Crate Item Editor | &6&l" in {_crate} with ""
+
+        if index of clicked slot is 45:
+            zcratemaker_gui_edit(player, {_crate})
+        
+        set {_slot} to -1
+        loop {zcratemaker::crates::%{_crate}%::items::*}:
+            add 1 to {_slot}
+            if clicked slot is {_slot}:
+                send "&cYou have deleted &4&n%loop-value%&c from the &n%{_crate}% Crate&c."
+                delete {zcratemaker::crates::%{_crate}%::items::%loop-index%}
+                zcratemaker_gui_itemeditor(player, {_crate})
+                stop
+        
     else if name of player's current inventory contains "&8Crate Gui Edit | &6&l":
         cancel event
         clicked inventory is player's current inventory
