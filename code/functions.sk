@@ -98,6 +98,7 @@ function zcratemaker_opencrate(p: player, name: text):# Thanks Sovde#0001 for th
             set {_item} to loop-value-1
             set {_nbt} to nbt compound of loop-value
             delete tag "tag;zcratemaker-chance" of {_nbt}
+            delete tag "tag;zcratemaker-id" of {_nbt}
             set {_item} to item from nbt {_nbt}
             add {_item} to {_p}'s inventory
 

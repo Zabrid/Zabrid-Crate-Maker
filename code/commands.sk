@@ -253,7 +253,7 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
                 send "&cThe chance you specified is not a number."
                 stop
             if arg 3 is "item" or "i":
-                add player's tool with nbt "{zcratemaker-chance:%{_chance}%}" to {zcratemaker::crates::%arg 2%::items::*}
+                add player's tool with nbt "{zcratemaker-chance:%{_chance}%,zcratemaker-id:""%random number between 0 and 10000000%""}" to {zcratemaker::crates::%arg 2%::items::*}
                 send "&aYou have added &2%player's tool%&a to the %arg 2% crate."
                 stop
             if arg 3 is "command" or "c":
@@ -263,7 +263,7 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
                     send "&8 -> &e/crate additem %arg 2% command <commands>"
                     stop
                 set {_commands::*} to arg 5 split by "||"
-                add player's tool with nbt "{zcratemaker-command:""%arg 5%"",zcratemaker-chance:%{_chance}%}" to {zcratemaker::crates::%arg 2%::items::*}
+                add player's tool with nbt "{zcratemaker-command:""%arg 5%"",zcratemaker-chance:%{_chance}%,zcratemaker-id:""%random number between 0 and 10000000%""}" to {zcratemaker::crates::%arg 2%::items::*}
                 send "&aYou have added &2%player's tool%&a to the %arg 2% crate."
                 send ""
                 send "&a&lCommands:"

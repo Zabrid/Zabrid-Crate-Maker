@@ -255,13 +255,10 @@ on inventory click:
             zcratemaker_gui_edit(player, {_crate})
         else if index of clicked slot is 12:
             click action is left mouse button 
-            if player's tool's type is {zcratemaker::crates::%{_crate}%::cratekeyitem}:
-                send "&cThe crate key item is already set to this."
-                stop
             if player's tool is air:
                 send "&cYou cannot set the crate item to air."
                 stop
-            set {zcratemaker::crates::%{_crate}%::cratekeyitem} to player's tool's type
+            set {zcratemaker::crates::%{_crate}%::cratekeyitem} to player's tool's type with all flags hidden
             send "&aYou have successfully updated the crate item of %{_crate}% to %{zcratemaker::crates::%{_crate}%::cratekeyitem}%"
             zcratemaker_gui_editcratekey(player, {_crate})
         else if index of clicked slot is 13:
