@@ -110,10 +110,15 @@ function zcratemaker_opencrate(p: player, name: text):# Thanks Sovde#0001 for th
         stop
 
 on right click:
+    set {_key} to "zcratemakerkey" tag of player's tool's nbt
+    if {_key} is set:
+        cancel event
     set {_tag} to {zcratemaker::cratelocations::%location of event-block%}
     {_tag} is set
     cancel event
-    set {_key} to "zcratemakerkey" tag of player's tool's nbt
+    if {_tag} is "*":
+        zcratemaker_gui_main(player)
+        stop
     if {_key} is not {_tag}:
 
         set {_item} to {zcratemaker::crates::%{_tag}%::guicrateitem}
@@ -138,4 +143,7 @@ on left click:
         set {_break} to true
     {_break} is not set
     cancel event
+    if {_tag} is "*":
+        zcratemaker_gui_main(player)
+        stop
     zcratemaker_gui_preview(player, {_tag}, "null")

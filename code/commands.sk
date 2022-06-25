@@ -148,7 +148,7 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
                 send "&cThe crate type you specified is invalid"
                 send "&8 -> &eValid Types: V, P, Virtual, Physical"
                 stop
-            set {_amt} to ( arg 4 ? 1 ) parsed as integer
+            set {_amt} to ( arg 5 ? 1 ) parsed as integer
             if arg 3 is "p" or "physical":
                 set {_item} to zcratemaker_generatekey(arg 2)
                 loop all players:
@@ -257,11 +257,13 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
                 stop
             if arg 2 is not set:
                 send "&cYou must specify the crate you want to set the block to."
+                send "&7&o(( Use ""*"" to specify this as the main /crates menu ))"
                 send "&8 -> &e/crate setcrate <name>"
                 stop 
-            if {zcratemaker::crates::%arg 2%} is not set:
-                send "&cThe crate you specified does not seem to exist."
-                stop
+            if arg 2 is not "*":
+                if {zcratemaker::crates::%arg 2%} is not set:
+                    send "&cThe crate you specified does not seem to exist."
+                    stop
             set {_tloc} to location of player's target block
             set {_ploc} to player's location
             if player's target block is not set:
