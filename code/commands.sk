@@ -11,6 +11,27 @@
 
 # ###################################################################
 
+on tab complete of "/crates" and "/crate" and "/zcrates":
+    if player has permission "zcratemaker.help":
+        add "help" to {_tabs::*}
+    if player has permission "zcratemaker.create":
+        add "create" to {_tabs::*}
+    if player has permission "zcratemaker.delete":
+        add "delete" to {_tabs::*}
+    if player has permission "zcratemaker.edit":
+        add "edit" to {_tabs::*}
+    if player has permission "zcratemaker.list":
+        add "list" to {_tabs::*}
+    if player has permission "zcratemaker.giveall":
+        add "giveall" to {_tabs::*}
+    if player has permission "zcratemaker.give":
+        add "give" to {_tabs::*}
+    if player has permission "zcratemaker.additem":
+        add "additem" to {_tabs::*}
+    if player has permission "zcratemaker.setcrate":
+        add "setcrate" to {_tabs::*}
+    set tab completions for position 1 to {_tabs::*}
+
 command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
     aliases: /crate, /zcrates
     trigger:
