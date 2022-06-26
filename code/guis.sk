@@ -11,6 +11,9 @@
 
 # ###################################################################
 
+options:
+    animations: "None" and "CSGO" # Makes it easier to add new ones
+
 # Main /crates GUI
 function zcratemaker_gui_main(p: player):
     set {_uuid} to uuid of {_p}
@@ -65,8 +68,8 @@ function zcratemaker_gui_preview(p: player, crate: text, type: text):
 function zcratemaker_gui_edit(p: player, crate: text):
     {zcratemaker::crates::%{_crate}%} is set
     set {_crate} to {zcratemaker::crates::%{_crate}%}
-    set {_gui} to chest inventory named "&8Zabrid's Crate Maker | &6&l%{_crate}%" with 3 rows
-    set {_gui} to zcratemaker_bordergui({_gui}, 3, 1 of grey stained glass pane named "&8Zabrid's Crate Maker")
+    set {_gui} to chest inventory named "&8Zabrid's Crate Maker | &6&l%{_crate}%" with 4 rows
+    set {_gui} to zcratemaker_bordergui({_gui}, 4, 1 of grey stained glass pane named "&8Zabrid's Crate Maker")
 
     # Crate Key Customization Display
     set {_key-item} to {zcratemaker::crates::%{_crate}%::cratekeyitem}
@@ -88,6 +91,16 @@ function zcratemaker_gui_edit(p: player, crate: text):
     # Reward Customization
     set {_items} to size of {zcratemaker::crates::%{_crate}%::items::*}
     set slot 14 of {_gui} to 1 of bone meal named "&eCrate Reward Customization" with lore "&8Zabrid's Crate Maker" and "" and "&7Edit the items this crate" and "&7rewards for opening it." and "" and "&eItem Amount: &f%{_items}%" and "" and "&bLeft click to modify crate rewards."
+
+    # Animations
+    set {_animations::*} to {@animations}
+    loop {_animations::*}:
+        if {zcratemaker::crates::%{_crate}%::animation} is loop-value:
+            add "&6 - &a%loop-value%" to {_ani::*}
+        else:
+            add "&6 - &c%loop-value%" to {_ani::*}
+    
+    set slot 22 of {_gui} to 1 of ender pearl named "&eAnimation Customization" with lore "&8Zabrid's Crate Maker" and "" and "&7Change what animation plays" and "&7while opening this crate." and "" and "&6Animations:" and {_ani::*} and "" and "&bClick to change the animation."
 
     open {_gui} to {_p}
 
@@ -188,7 +201,15 @@ on inventory click:
                         subtract 1 from {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
                         if {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} is 0:
                             delete {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
-                        zcratemaker_opencrate(player, {_crate})
+                        if {zcratemaker::crates::%{_crate}%::animation} is not set:
+                            zcratemaker_opencrate(player, {_crate})
+                            zcratemaker_gui_main(player)
+                        else if {zcratemaker::crates::%{_crate}%::animation} is "None":
+                            zcratemaker_opencrate(player, {_crate})
+                            zcratemaker_gui_main(player)
+                        else if {zcratemaker::crates::%{_crate}%::animation} is "CSGO":
+                            zcratemaker_animations_csgo(player, {_crate})
+
                     else:
                         set {_message::*} to zcratemaker_getlang("not-enough-keys")
 
@@ -246,6 +267,15 @@ on inventory click:
             zcratemaker_gui_editcrategui(player, {_crate})
         else if index of clicked slot is 14:
             zcratemaker_gui_itemeditor(player, {_crate})
+        else if index of clicked slot is 22:
+            set {_animations::*} to {@animations}
+            if {zcratemaker::crates::%{_crate}%::animation} is not set:
+                set {zcratemaker::crates::%{_crate}%::animation} to "None"
+            else if {zcratemaker::crates::%{_crate}%::animation} is "None":
+                set {zcratemaker::crates::%{_crate}%::animation} to "CSGO"
+            else if {zcratemaker::crates::%{_crate}%::animation} is "CSGO":
+                set {zcratemaker::crates::%{_crate}%::animation} to "None"
+            zcratemaker_gui_edit(player, {_crate})
     else if name of player's current inventory contains "&8Crate Key Edit | &6&l":
         cancel event
         clicked inventory is player's current inventory

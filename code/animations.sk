@@ -1,0 +1,102 @@
+# ###################################################################
+
+# Zabrid's Crate Maker
+# Source Code
+
+# Feel free to change anything below this point.
+# Although, beware you might break something!
+
+# If you make a change and think that it should be pushed to the official script
+# make a pull request on the GitHub https://github.com/Zabrid/Zabrid-Crate-Maker
+
+# ###################################################################
+
+function zcratemaker_animations_csgo(p: player, name: text):
+    {zcratemaker::crates::%{_name}%} is set
+
+    set {_gui-name::*} to zcratemaker_getconfig("animations [csgo] [gui-name]")
+    set {_gui-fill::*} to zcratemaker_getconfig("animations [csgo] [fill-item]")
+    set {_gui-win::*} to zcratemaker_getconfig("animations [csgo] [win-item]")
+    set {_gui} to chest inventory named {_gui-name::1} with 3 rows
+    open {_gui} to {_p}
+
+    set {_maxchance} to 0
+    loop {zcratemaker::crates::%{_name}%::items::*}:
+        set {_minchance::%loop-index%} to {_maxchance}
+        set {_chance} to "zcratemaker-chance" tag of loop-value's nbt
+        add {_chance} to {_maxchance}
+        set {_maxchance::%loop-index%} to {_maxchance}
+    loop 50 times:
+        set {_num} to a random number between 0 and {_maxchance}
+        loop {zcratemaker::crates::%{_name}%::items::*}:
+            {_num} is between {_minchance::%loop-index%} and {_maxchance::%loop-index%}
+            add {zcratemaker::crates::%{_name}%::items::%loop-index%} to {_roll::*}
+    
+    # This is based off LimeGlass's snippet
+    # https://forums.skunity.com/threads/custom-crate-templates-creating-crate-designs-for-free.1922/#post-4110
+
+    set {_speedFinal} to "%zcratemaker_getconfig("animations [csgo] [speed]")%" parsed as integer
+    #Selector settings (Where the selectors should be)
+    set {_Selector1} to 4
+    set {_Selector2} to 22
+
+    loop (random integer between 21 and 50) times:
+
+        set {_sel} to 21
+        loop {_sel} times:
+            set {_sel2} to {_sel} - 1
+            set {_item::%{_sel}%} to {_item::%{_sel2}%}
+            subtract 1 from {_sel}
+        
+        set {_item::1} to a random element out of {_roll::*}
+
+        loop integers between 0 and ( 3 * 9 ) - 1:
+            if loop-number-2 is {_Selector1} or {_Selector2}:
+                set slot loop-number-2 of {_gui} to {_gui-win::1}
+            else:
+                set slot loop-number-2 of {_gui} to {_gui-fill::1}
+            loop 9 times:
+                set slot 8 + loop-number-3 of {_gui} to {_item::%loop-number-3%}
+        
+        if {_speed} is 5:
+            set {_speed} to 0
+            add 1 to {_speedFinal}
+        loop {_speedFinal} times:
+            wait a tick
+
+        open {_gui} to {_p}
+    
+    set {_wonItem} to slot 13 of {_gui}
+
+    set {_reward} to {_wonItem}'s name ? "%{_wonItem}'s type%"
+    set {_crate} to {zcratemaker::crates::%{_name}%::guicratename}
+    set {_prefix} to "%zcratemaker_getconfig("prefix")%"
+
+    set {_command} to "zcratemaker-command" tag of {_wonItem}'s nbt
+    if {_command} is set:
+        set {_commands::*} to {_command} split by "||"
+        loop {_commands::*}:
+            set {_cmd} to loop-value-2
+            replace all "{player}" and "{p}" in {_cmd} with "%{_p}%"
+            execute console command {_cmd}
+        
+    else: 
+        set {_item} to {_wonItem}
+        set {_nbt} to nbt compound of {_wonItem}
+        delete tag "tag;zcratemaker-chance" of {_nbt}
+        delete tag "tag;zcratemaker-id" of {_nbt}
+        set {_item} to item from nbt {_nbt}
+        add {_item} to {_p}'s inventory
+
+    set {_message::*} to zcratemaker_getlang("reward")
+    replace all "{prefix}" in {_message::*} with {_prefix}
+    replace all "{reward}" in {_message::*} with {_reward}
+    replace all "{crate}" in {_message::*} with {_crate}
+    replace all "{player}" and "{p}" in {_message::*} with {_player}
+    send formatted {_message::*} to {_p}
+    stop
+
+on inventory click:
+    set {_gui-name::*} to zcratemaker_getconfig("animations [csgo] [gui-name]")
+    name of player's current inventory is {_gui-name::1}
+    cancel event

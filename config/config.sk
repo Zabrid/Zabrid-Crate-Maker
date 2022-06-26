@@ -31,6 +31,12 @@ options:
     preview [back-slot]: 53
     preview [back-item]: 1 of birch door named "&cReturn to previous menu." with lore "&7Click to return to the previous menu."
 
+# Animation GUI Customization
+    animations [csgo] [gui-name]: "&6Opening Crate..." # Make sure this gui name is unique to any other GUIs
+    animations [csgo] [fill-item]: 1 of black stained glass pane named "" # set to `air` to disable
+    animations [csgo] [win-item]: 1 of yellow stained glass pane named "&e&lWINNING ITEM!"
+    animations [csgo] [speed]: 2 # The higher the number, the slower, make sure it's an integer
+
 
 
 
@@ -68,8 +74,14 @@ function zcratemaker_getconfig(t: text) :: objects:
     else if {_t} is "preview [reward-item-lore]":
         return {@preview [reward-item-lore]}
     
+    else if {_t} is "animations [csgo] [gui-name]":
+        return {@animations [csgo] [gui-name]}
+    else if {_t} is "animations [csgo] [fill-item]":
+        return {@animations [csgo] [fill-item]}
+    else if {_t} is "animations [csgo] [win-item]":
+        return {@animations [csgo] [win-item]}
+    else if {_t} is "animations [csgo] [speed]":
+        return {@animations [csgo] [speed]}
+    
     else:
         return "Invalid value specified."
-
-function zcratemaker_reloadconfig():
-    execute console command "sk reload %script%"

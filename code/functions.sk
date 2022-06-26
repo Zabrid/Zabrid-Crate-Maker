@@ -37,6 +37,9 @@ function zcratemaker_createcrate(name: text) :: boolean: # Will return true if w
     set {zcratemaker::crates::%{_name}%::guicratename} to "&6%{_name}% Crate"  # This is used for the GUI item
     set {zcratemaker::crates::%{_name}%::guicratelore} to "||&7Keys: &e{keys}||||&bLeft click to open this crate||&bRight click to preview this crate||&bMiddle click to open all keys."
 
+    # Animations
+    set {zcratemaker::crates::%{_name}%::animation} to "None"
+
     # Crate Key Stuff
     set {zcratemaker::crates::%{_name}%::cratekeyitem} to tripwire hook
     set {zcratemaker::crates::%{_name}%::cratekeyname} to "&6%{_name}% Key"
@@ -133,7 +136,12 @@ on right click:
         send formatted {_message::*} to player
         stop
     remove 1 of player's tool from player's inventory
-    zcratemaker_opencrate(player, {_tag})
+    if {zcratemaker::crates::%{_tag}%::animation} is not set:
+        zcratemaker_opencrate(player, {_tag})
+    else if {zcratemaker::crates::%{_tag}%::animation} is "None":
+        zcratemaker_opencrate(player, {_tag})
+    else if {zcratemaker::crates::%{_tag}%::animation} is "CSGO":
+        zcratemaker_animations_csgo(player, {_tag})
 
 on left click:
     set {_tag} to {zcratemaker::cratelocations::%location of event-block%}
