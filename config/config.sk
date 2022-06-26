@@ -36,6 +36,9 @@ options:
     animations [csgo] [fill-item]: 1 of black stained glass pane named "" # set to `air` to disable
     animations [csgo] [win-item]: 1 of yellow stained glass pane named "&e&lWINNING ITEM!"
     animations [csgo] [speed]: 2 # The higher the number, the slower, make sure it's an integer
+    animations [csgo] [winning-sound]: "block.chest.open" # For a full list of sounds go to https://www.digminecraft.com/lists/sound_list_pc.php
+    animations [csgo] [rolling-sound]: "block.note_block.snare" # For a full list of sounds go to https://www.digminecraft.com/lists/sound_list_pc.php
+    animations [csgo] [direction]: "left" # "Right" = Right to left, "Left" = Left to right
 
 
 
@@ -82,6 +85,12 @@ function zcratemaker_getconfig(t: text) :: objects:
         return {@animations [csgo] [win-item]}
     else if {_t} is "animations [csgo] [speed]":
         return {@animations [csgo] [speed]}
+    else if {_t} is "animations [csgo] [rolling-sound]":
+        return {@animations [csgo] [rolling-sound]}
+    else if {_t} is "animations [csgo] [winning-sound]":
+        return {@animations [csgo] [winning-sound]}
+    else if {_t} is "animations [csgo] [direction]":
+        return {@animations [csgo] [direction]}
     
     else:
         return "Invalid value specified."

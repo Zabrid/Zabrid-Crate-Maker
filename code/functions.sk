@@ -141,7 +141,7 @@ on right click:
     else if {zcratemaker::crates::%{_tag}%::animation} is "None":
         zcratemaker_opencrate(player, {_tag})
     else if {zcratemaker::crates::%{_tag}%::animation} is "CSGO":
-        zcratemaker_animations_csgo(player, {_tag})
+        zcratemaker_animations_csgo(player, {_tag}, "%zcratemaker_getconfig("animations [csgo] [direction]")%")
 
 on left click:
     set {_tag} to {zcratemaker::cratelocations::%location of event-block%}

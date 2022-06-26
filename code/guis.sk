@@ -208,7 +208,7 @@ on inventory click:
                             zcratemaker_opencrate(player, {_crate})
                             zcratemaker_gui_main(player)
                         else if {zcratemaker::crates::%{_crate}%::animation} is "CSGO":
-                            zcratemaker_animations_csgo(player, {_crate})
+                            zcratemaker_animations_csgo(player, {_crate}, "%zcratemaker_getconfig("animations [csgo] [direction]")%")
 
                     else:
                         set {_message::*} to zcratemaker_getlang("not-enough-keys")

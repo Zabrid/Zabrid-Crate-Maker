@@ -11,7 +11,7 @@
 
 # ###################################################################
 
-function zcratemaker_animations_csgo(p: player, name: text):
+function zcratemaker_animations_csgo(p: player, name: text, dir: text):
     {zcratemaker::crates::%{_name}%} is set
 
     set {_gui-name::*} to zcratemaker_getconfig("animations [csgo] [gui-name]")
@@ -40,7 +40,10 @@ function zcratemaker_animations_csgo(p: player, name: text):
     set {_Selector1} to 4
     set {_Selector2} to 22
 
-    loop (random integer between 21 and 50) times:
+    set {_roll} to random integer between 21 and 50
+    set {_roll2} to 0
+    loop {_roll} times:
+        add 1 to {_roll2}
 
         set {_sel} to 21
         loop {_sel} times:
@@ -56,13 +59,22 @@ function zcratemaker_animations_csgo(p: player, name: text):
             else:
                 set slot loop-number-2 of {_gui} to {_gui-fill::1}
             loop 9 times:
-                set slot 8 + loop-number-3 of {_gui} to {_item::%loop-number-3%}
+                if {_dir} is "right":
+                    set slot 18 - loop-number-3 of {_gui} to {_item::%loop-number-3%}
+                else if {_dir} is "left":
+                    set slot 8 + loop-number-3 of {_gui} to {_item::%loop-number-3%}
         
+        add 1 to {_speed}
         if {_speed} is 5:
             set {_speed} to 0
             add 1 to {_speedFinal}
         loop {_speedFinal} times:
             wait a tick
+
+        if {_roll2} is {_roll}:
+            play sound "%zcratemaker_getconfig("animations [csgo] [winning-sound]")%" with volume 0.3 to {_p}
+        else:
+            play sound "%zcratemaker_getconfig("animations [csgo] [rolling-sound]")%" with volume 0.3 to {_p}
 
         open {_gui} to {_p}
     
