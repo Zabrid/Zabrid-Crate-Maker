@@ -12,7 +12,7 @@
 # ###################################################################
 
 options:
-    animations: "None" and "CSGO" # Makes it easier to add new ones
+    animations: "None" and "CSGO" and "Lightning" # Makes it easier to add new ones
 
 # Main /crates GUI
 function zcratemaker_gui_main(p: player):
@@ -209,6 +209,8 @@ on inventory click:
                             zcratemaker_gui_main(player)
                         else if {zcratemaker::crates::%{_crate}%::animation} is "CSGO":
                             zcratemaker_animations_csgo(player, {_crate}, "%zcratemaker_getconfig("animations [csgo] [direction]")%")
+                        else if {zcratemaker::crates::%{_crate}%::animation} is "Lightning":
+                            zcratemaker_animations_lightning(player, {_crate})
 
                     else:
                         set {_message::*} to zcratemaker_getlang("not-enough-keys")
@@ -271,10 +273,16 @@ on inventory click:
             set {_animations::*} to {@animations}
             if {zcratemaker::crates::%{_crate}%::animation} is not set:
                 set {zcratemaker::crates::%{_crate}%::animation} to "None"
+
             else if {zcratemaker::crates::%{_crate}%::animation} is "None":
                 set {zcratemaker::crates::%{_crate}%::animation} to "CSGO"
+
             else if {zcratemaker::crates::%{_crate}%::animation} is "CSGO":
+                set {zcratemaker::crates::%{_crate}%::animation} to "Lightning"
+
+            else if {zcratemaker::crates::%{_crate}%::animation} is "Lightning":
                 set {zcratemaker::crates::%{_crate}%::animation} to "None"
+
             zcratemaker_gui_edit(player, {_crate})
     else if name of player's current inventory contains "&8Crate Key Edit | &6&l":
         cancel event

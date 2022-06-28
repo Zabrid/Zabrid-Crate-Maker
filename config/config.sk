@@ -32,13 +32,21 @@ options:
     preview [back-item]: 1 of birch door named "&cReturn to previous menu." with lore "&7Click to return to the previous menu."
 
 # Animation GUI Customization
-    animations [csgo] [gui-name]: "&6Opening Crate..." # Make sure this gui name is unique to any other GUIs
+    animations [gui-name]: "&6Opening Crate..." # Make sure this gui name is unique to any other GUIs
+
     animations [csgo] [fill-item]: 1 of black stained glass pane named "" # set to `air` to disable
     animations [csgo] [win-item]: 1 of yellow stained glass pane named "&e&lWINNING ITEM!"
     animations [csgo] [speed]: 2 # The higher the number, the slower, make sure it's an integer
     animations [csgo] [winning-sound]: "block.chest.open" # For a full list of sounds go to https://www.digminecraft.com/lists/sound_list_pc.php
     animations [csgo] [rolling-sound]: "block.note_block.snare" # For a full list of sounds go to https://www.digminecraft.com/lists/sound_list_pc.php
     animations [csgo] [direction]: "left" # "Right" = Right to left, "Left" = Left to right
+
+    animations [lightning] [fill-item]: 1 of black stained glass pane named "" # set to `air` to disable
+    animations [lightning] [win-item]: 1 of yellow stained glass pane named "&e&lWINNING ITEM!"
+    animations [lightning] [speed]: 2 # The higher the number, the slower, make sure it's an integer
+    animations [lightning] [winning-sound]: "block.chest.open" # For a full list of sounds go to https://www.digminecraft.com/lists/sound_list_pc.php
+    animations [lightning] [rolling-sound]: "block.note_block.snare" # For a full list of sounds go to https://www.digminecraft.com/lists/sound_list_pc.php
+
 
 
 
@@ -69,16 +77,16 @@ function zcratemaker_getconfig(t: text) :: objects:
         return {@preview [size]}
     else if {_t} is "preview [fill-item]":
         return {@preview [fill-item]}
-    
+
     else if {_t} is "preview [back-slot]":
         return {@preview [back-slot]}
     else if {_t} is "preview [back-item]":
         return {@preview [back-item]}
     else if {_t} is "preview [reward-item-lore]":
         return {@preview [reward-item-lore]}
-    
-    else if {_t} is "animations [csgo] [gui-name]":
-        return {@animations [csgo] [gui-name]}
+
+    else if {_t} is "animations [gui-name]":
+        return {@animations [gui-name]}
     else if {_t} is "animations [csgo] [fill-item]":
         return {@animations [csgo] [fill-item]}
     else if {_t} is "animations [csgo] [win-item]":
@@ -91,6 +99,17 @@ function zcratemaker_getconfig(t: text) :: objects:
         return {@animations [csgo] [winning-sound]}
     else if {_t} is "animations [csgo] [direction]":
         return {@animations [csgo] [direction]}
-    
+
+    else if {_t} is "animations [lightning] [fill-item]":
+        return {@animations [lightning] [fill-item]}
+    else if {_t} is "animations [lightning] [win-item]":
+        return {@animations [lightning] [win-item]}
+    else if {_t} is "animations [lightning] [speed]":
+        return {@animations [lightning] [speed]}
+    else if {_t} is "animations [lightning] [winning-sound]":
+        return {@animations [lightning] [winning-sound]}
+    else if {_t} is "animations [lightning] [rolling-sound]":
+        return {@animations [lightning] [rolling-sound]}
+
     else:
         return "Invalid value specified."
