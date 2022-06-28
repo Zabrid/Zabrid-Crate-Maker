@@ -144,6 +144,8 @@ on right click:
         zcratemaker_animations_csgo(player, {_tag}, "%zcratemaker_getconfig("animations [csgo] [direction]")%")
     else if {zcratemaker::crates::%{_tag}%::animation} is "Lightning":
         zcratemaker_animations_lightning(player, {_tag})
+    else if {zcratemaker::crates::%{_tag}%::animation} is "Soul":
+        zcratemaker_animations_soul(player, {_tag})
 
 on left click:
     set {_tag} to {zcratemaker::cratelocations::%location of event-block%}

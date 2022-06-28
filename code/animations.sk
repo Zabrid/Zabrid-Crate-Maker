@@ -135,7 +135,7 @@ function zcratemaker_animations_lightning(p: player, name: text):
     # This is based off LimeGlass's snippet
     # https://forums.skunity.com/threads/custom-crate-templates-creating-crate-designs-for-free.1922/#post-4110
 
-    set {_speedFinal} to "%zcratemaker_getconfig("animations [csgo] [speed]")%" parsed as integer
+    set {_speedFinal} to "%zcratemaker_getconfig("animations [lightning] [speed]")%" parsed as integer
     #Selector settings (Where the selectors should be)
     set {_Selector1} to 13
     set {_Selector2} to 31
@@ -183,8 +183,104 @@ function zcratemaker_animations_lightning(p: player, name: text):
         loop {_speedFinal} times:
             wait a tick
         
-        set {_winning-sound} to "%zcratemaker_getconfig("animations [csgo] [winning-sound]")%"
-        set {_rolling-sound} to "%zcratemaker_getconfig("animations [csgo] [rolling-sound]")%"
+        set {_winning-sound} to "%zcratemaker_getconfig("animations [lightning] [winning-sound]")%"
+        set {_rolling-sound} to "%zcratemaker_getconfig("animations [lightning] [rolling-sound]")%"
+        if {_roll2} is {_roll}:
+            play sound {_winning-sound} with volume 0.3 to {_p}
+        else:
+            play sound {_rolling-sound} with volume 0.3 to {_p}
+
+        open {_gui} to {_p}
+    
+    set {_wonItem} to slot 22 of {_gui}
+
+    set {_reward} to {_wonItem}'s name ? "%{_wonItem}'s type%"
+    set {_crate} to {zcratemaker::crates::%{_name}%::guicratename}
+    set {_prefix} to "%zcratemaker_getconfig("prefix")%"
+
+    set {_command} to "zcratemaker-command" tag of {_wonItem}'s nbt
+    if {_command} is set:
+        set {_commands::*} to {_command} split by "||"
+        loop {_commands::*}:
+            set {_cmd} to loop-value-2
+            replace all "{player}" and "{p}" in {_cmd} with "%{_p}%"
+            execute console command {_cmd}
+        
+    else: 
+        set {_item} to {_wonItem}
+        set {_nbt} to nbt compound of {_wonItem}
+        delete tag "tag;zcratemaker-chance" of {_nbt}
+        delete tag "tag;zcratemaker-id" of {_nbt}
+        set {_item} to item from nbt {_nbt}
+        add {_item} to {_p}'s inventory
+
+    set {_message::*} to zcratemaker_getlang("reward")
+    replace all "{prefix}" in {_message::*} with {_prefix}
+    replace all "{reward}" in {_message::*} with {_reward}
+    replace all "{crate}" in {_message::*} with {_crate}
+    replace all "{player}" and "{p}" in {_message::*} with {_player}
+    send formatted {_message::*} to {_p}
+    stop
+
+function zcratemaker_animations_soul(p: player, name: text):
+    {zcratemaker::crates::%{_name}%} is set
+
+    set {_gui-name::*} to zcratemaker_getconfig("animations [gui-name]")
+    set {_gui-fill::*} to zcratemaker_getconfig("animations [soul] [fill-item]")
+    set {_gui-win::*} to zcratemaker_getconfig("animations [soul] [win-item]")
+    set {_gui} to chest inventory named {_gui-name::1} with 5 rows
+    open {_gui} to {_p}
+
+    set {_maxchance} to 0
+    loop {zcratemaker::crates::%{_name}%::items::*}:
+        set {_minchance::%loop-index%} to {_maxchance}
+        set {_chance} to "zcratemaker-chance" tag of loop-value's nbt
+        add {_chance} to {_maxchance}
+        set {_maxchance::%loop-index%} to {_maxchance}
+    loop 50 times:
+        set {_num} to a random number between 0 and {_maxchance}
+        loop {zcratemaker::crates::%{_name}%::items::*}:
+            {_num} is between {_minchance::%loop-index%} and {_maxchance::%loop-index%}
+            add {zcratemaker::crates::%{_name}%::items::%loop-index%} to {_roll::*}
+
+    # This is based off LimeGlass's snippet
+    # https://forums.skunity.com/threads/custom-crate-templates-creating-crate-designs-for-free.1922/#post-4110
+
+    set {_speedFinal} to "%zcratemaker_getconfig("animations [soul] [speed]")%" parsed as integer
+    #Selector settings (Where the selectors should be)
+    set {_Selector1} to 21
+    set {_Selector2} to 23
+
+    set {_roll} to random integer between 10 and 40
+    set {_roll2} to 0
+    loop {_roll} times:
+        add 1 to {_roll2}
+
+        set {_sel} to 5
+        loop {_sel} times:
+            set {_sel2} to {_sel} - 1
+            set {_item::%{_sel}%} to {_item::%{_sel2}%}
+            subtract 1 from {_sel}
+        
+        set {_item::1} to a random element out of {_roll::*}
+
+        loop integers between 0 and ( 5 * 9 ) - 1:
+            if loop-number-2 is {_Selector1} or {_Selector2}:
+                set slot loop-number-2 of {_gui} to {_gui-win::1}
+            else:
+                set slot loop-number-2 of {_gui} to {_gui-fill::1}
+            loop 5 times:
+                set slot -5 + (9 * loop-number-3) of {_gui} to {_item::%loop-number-3%}
+        
+        add 1 to {_speed}
+        if {_speed} is 6:
+            set {_speed} to 0
+            add 1 to {_speedFinal}
+        loop {_speedFinal} times:
+            wait a tick
+        
+        set {_winning-sound} to "%zcratemaker_getconfig("animations [soul] [winning-sound]")%"
+        set {_rolling-sound} to "%zcratemaker_getconfig("animations [soul] [rolling-sound]")%"
         if {_roll2} is {_roll}:
             play sound {_winning-sound} with volume 0.3 to {_p}
         else:

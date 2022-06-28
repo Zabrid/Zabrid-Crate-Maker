@@ -34,18 +34,24 @@ options:
 # Animation GUI Customization
     animations [gui-name]: "&6Opening Crate..." # Make sure this gui name is unique to any other GUIs
 
-    animations [csgo] [fill-item]: 1 of black stained glass pane named "" # set to `air` to disable
+    animations [csgo] [fill-item]: 1 of black stained glass pane named "&7" # set to `air` to disable
     animations [csgo] [win-item]: 1 of yellow stained glass pane named "&e&lWINNING ITEM!"
     animations [csgo] [speed]: 2 # The higher the number, the slower, make sure it's an integer
     animations [csgo] [winning-sound]: "block.chest.open" # For a full list of sounds go to https://www.digminecraft.com/lists/sound_list_pc.php
     animations [csgo] [rolling-sound]: "block.note_block.snare" # For a full list of sounds go to https://www.digminecraft.com/lists/sound_list_pc.php
     animations [csgo] [direction]: "left" # "Right" = Right to left, "Left" = Left to right
 
-    animations [lightning] [fill-item]: 1 of black stained glass pane named "" # set to `air` to disable
+    animations [lightning] [fill-item]: 1 of white stained glass pane named "&7" # set to `air` to disable
     animations [lightning] [win-item]: 1 of yellow stained glass pane named "&e&lWINNING ITEM!"
     animations [lightning] [speed]: 2 # The higher the number, the slower, make sure it's an integer
-    animations [lightning] [winning-sound]: "block.chest.open" # For a full list of sounds go to https://www.digminecraft.com/lists/sound_list_pc.php
-    animations [lightning] [rolling-sound]: "block.note_block.snare" # For a full list of sounds go to https://www.digminecraft.com/lists/sound_list_pc.php
+    animations [lightning] [winning-sound]: "entity.lightning_bolt.impact" # For a full list of sounds go to https://www.digminecraft.com/lists/sound_list_pc.php
+    animations [lightning] [rolling-sound]: "entity.lightning_bolt.thunder" # For a full list of sounds go to https://www.digminecraft.com/lists/sound_list_pc.php
+
+    animations [soul] [fill-item]: 1 of black stained glass pane named "&7" # set to `air` to disable
+    animations [soul] [win-item]: 1 of purple stained glass pane named "&e&lWINNING ITEM!"
+    animations [soul] [speed]: 2 # The higher the number, the slower, make sure it's an integer
+    animations [soul] [winning-sound]: "block.chest.open" # For a full list of sounds go to https://www.digminecraft.com/lists/sound_list_pc.php
+    animations [soul] [rolling-sound]: "block.note_block.snare" # For a full list of sounds go to https://www.digminecraft.com/lists/sound_list_pc.php
 
 
 
@@ -110,6 +116,17 @@ function zcratemaker_getconfig(t: text) :: objects:
         return {@animations [lightning] [winning-sound]}
     else if {_t} is "animations [lightning] [rolling-sound]":
         return {@animations [lightning] [rolling-sound]}
+
+    else if {_t} is "animations [soul] [fill-item]":
+        return {@animations [soul] [fill-item]}
+    else if {_t} is "animations [soul] [win-item]":
+        return {@animations [soul] [win-item]}
+    else if {_t} is "animations [soul] [speed]":
+        return {@animations [soul] [speed]}
+    else if {_t} is "animations [soul] [winning-sound]":
+        return {@animations [soul] [winning-sound]}
+    else if {_t} is "animations [soul] [rolling-sound]":
+        return {@animations [soul] [rolling-sound]}
 
     else:
         return "Invalid value specified."
