@@ -40,7 +40,7 @@ function zcratemaker_animations_csgo(p: player, name: text, dir: text):
     set {_Selector1} to 4
     set {_Selector2} to 22
 
-    set {_roll} to random integer between 21 and 50
+    set {_roll} to 33
     set {_roll2} to 0
     loop {_roll} times:
         add 1 to {_roll2}
@@ -142,7 +142,7 @@ function zcratemaker_animations_lightning(p: player, name: text):
     set {_Selector3} to 21
     set {_Selector4} to 23
 
-    set {_roll} to random integer between 20 and 50
+    set {_roll} to 33
     set {_roll2} to 0
     loop {_roll} times:
         add 1 to {_roll2}
@@ -251,7 +251,7 @@ function zcratemaker_animations_soul(p: player, name: text):
     set {_Selector1} to 21
     set {_Selector2} to 23
 
-    set {_roll} to random integer between 10 and 40
+    set {_roll} to 33
     set {_roll2} to 0
     loop {_roll} times:
         add 1 to {_roll2}
