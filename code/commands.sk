@@ -192,8 +192,8 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
                 send "&cYou must specify a player to give the crate to."
                 send "&8 -> &e/crate give <player> <crate> <type> <amt?1>"
                 stop
-            set {_p} to arg 2 parsed as offline player
-            if all players does not contain {_p}:
+            set {_p} to arg 2 parsed as player
+            if {_p} is not set:
                 send "&cThe player you specified is not online."
                 stop
             if arg 3 is not set:
@@ -212,14 +212,14 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
                 send "&cThe crate type you specified is invalid"
                 send "&8 -> &eValid Types: V, P, Virtual, Physical"
                 stop
-            set {_amt} to ( arg 5 ? 1 ) parsed as integer
+            set {_amt} to arg 5 parsed as integer
             if arg 4 is "p" or "physical":
                 set {_item} to zcratemaker_generatekey(arg 3)
-                add {_amt} of {_item} to {_p}'s inventory
-                send "&aYou have given %{_p}% %{_amt}% physical %arg 3% crate key(s)."
+                add {_amt} ? 1 of {_item} to {_p}'s inventory
+                send "&aYou have given %{_p}% %{_amt} ? 1% physical %arg 3 ? "1"% crate key(s)."
             if arg 4 is "v" or "virtual":
-                zcratemaker_givekey(player, arg 3, {_amt})
-                send "&aYou have given %{_p}% %{_amt}% virtual %arg 3% crate key(s)."
+                zcratemaker_givekey(player, arg 3, "%{_amt} ? 1%" parsed as integer)
+                send "&aYou have given %{_p}% %{_amt} ? 1% virtual %arg 3 ? "1"% crate key(s)."
         
         else if arg 1 is "additem":
             set {_chance} to arg 4 parsed as number
