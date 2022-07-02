@@ -193,7 +193,7 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
                 send "&8 -> &e/crate give <player> <crate> <type> <amt?1>"
                 stop
             set {_p} to arg 2 parsed as offline player
-            if {_p} is not online:
+            if all players does not contain {_p}:
                 send "&cThe player you specified is not online."
                 stop
             if arg 3 is not set:
