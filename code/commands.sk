@@ -170,15 +170,17 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
                 send "&8 -> &eValid Types: V, P, Virtual, Physical"
                 stop
             set {_amt} to arg 4 parsed as integer
+            if {_amt} is not set:
+                set {_amt} to 1
             if arg 3 is "p" or "physical":
                 set {_item} to zcratemaker_generatekey(arg 2)
                 loop all players:
-                    add {_amt} ? 1 of {_item} to loop-player's inventory
-                send "&aYou have given everyone %{_amt} ? 1% physical %arg 2% crate key(s)."
+                    add {_amt} of {_item} to loop-player's inventory
+                send "&aYou have given everyone %{_amt}% physical %arg 2% crate key(s)."
             if arg 3 is "v" or "virtual":
                 loop all players:
-                    zcratemaker_givekey(loop-player, arg 2, "%{_amt} ? 1%" parsed as integer)
-                send "&aYou have given everyone %{_amt} ? 1% virtual %arg 2% crate key(s)."
+                    zcratemaker_givekey(loop-player, arg 2, "%{_amt}%" parsed as integer)
+                send "&aYou have given everyone %{_amt}% virtual %arg 2% crate key(s)."
 
         else if arg 1 is "give":
             if player has permission "zcratemaker.give":
