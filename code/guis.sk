@@ -55,8 +55,9 @@ function zcratemaker_gui_preview(p: player, crate: text, type: text):
     set {_slot} to -1
     loop {zcratemaker::crates::%{_crate}%::items::*}:
         add 1 to {_slot}
-
-        set {_chance} to tag "zcratemaker-chance" of loop-value's nbt
+        
+        set {_nbt} to nbt compound of loop-value
+        set {_chance} to tag "tag;zcratemaker-chance" of {_nbt}
         set {_lore::*} to zcratemaker_getconfig("preview [reward-item-lore]")
         replace all "{chance}" in {_lore::*} with "%{_chance}%"
 
@@ -138,8 +139,9 @@ function zcratemaker_gui_itemeditor(p: player, crate: text):
     loop {zcratemaker::crates::%{_crate}%::items::*}:
         add 1 to {_slot}
 
-        set {_chance} to tag "zcratemaker-chance" of loop-value-1's nbt
-        set {_commands} to tag "zcratemaker-command" of loop-value-1's nbt
+        set {_nbt} to nbt compound of loop-value-1
+        set {_chance} to tag "tag;zcratemaker-chance" of {_nbt}
+        set {_commands} to tag "tag;zcratemaker-command" of {_nbt}
         set {_commands::*} to {_commands} split by "||"
         set {_lore::*} to zcratemaker_getconfig("preview [reward-item-lore]")
         replace all "{chance}" in {_lore::*} with "%{_chance}%"
@@ -254,7 +256,8 @@ on inventory click:
         clicked inventory is player's current inventory
         set {_back-slot::*} to zcratemaker_getconfig("preview [back-slot]")
         if index of clicked slot is {_back-slot::1}:
-            set {_back} to tag "backbutton" of clicked slot's nbt
+            set {_nbt} to nbt compound of clicked slot
+            set {_back} to tag "tag;backbutton" of {_nbt}
             {_back} is set
             zcratemaker_gui_main(player)
 

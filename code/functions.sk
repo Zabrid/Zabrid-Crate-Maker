@@ -77,8 +77,9 @@ function zcratemaker_opencrate(p: player, name: text):# Thanks Sovde#0001 for th
     {zcratemaker::crates::%{_name}%} is set
     set {_maxchance} to 0
     loop {zcratemaker::crates::%{_name}%::items::*}:
+        set {_nbt} to nbt compound of loop-value
         set {_minchance::%loop-index%} to {_maxchance}
-        set {_chance} to "zcratemaker-chance" tag of loop-value's nbt
+        set {_chance} to "tag;zcratemaker-chance" tag of {_nbt}
         add {_chance} to {_maxchance}
         set {_maxchance::%loop-index%} to {_maxchance}
     set {_num} to a random number between 0 and {_maxchance}
@@ -88,8 +89,9 @@ function zcratemaker_opencrate(p: player, name: text):# Thanks Sovde#0001 for th
         set {_reward} to loop-value-1's name ? "%loop-value's type%"
         set {_crate} to {zcratemaker::crates::%{_name}%::guicratename}
         set {_prefix} to "%zcratemaker_getconfig("prefix")%"
-
-        set {_command} to "zcratemaker-command" tag of loop-value's nbt
+        
+        set {_nbt} to nbt compound of loop-value
+        set {_command} to "tag;zcratemaker-command" tag of {_nbt}
         if {_command} is set:
             set {_commands::*} to {_command} split by "||"
             loop {_commands::*}:
@@ -114,7 +116,8 @@ function zcratemaker_opencrate(p: player, name: text):# Thanks Sovde#0001 for th
         stop
 
 on right click:
-    set {_key} to "zcratemakerkey" tag of player's tool's nbt
+    set {_nbt} to nbt compound of player's tool
+    set {_key} to tag "tag;zcratemakerkey" of {_nbt}
     if {_key} is set:
         cancel event
     set {_tag} to {zcratemaker::cratelocations::%location of event-block%}

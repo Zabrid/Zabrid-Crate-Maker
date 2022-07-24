@@ -23,7 +23,8 @@ function zcratemaker_animations_csgo(p: player, name: text, dir: text):
     set {_maxchance} to 0
     loop {zcratemaker::crates::%{_name}%::items::*}:
         set {_minchance::%loop-index%} to {_maxchance}
-        set {_chance} to "zcratemaker-chance" tag of loop-value's nbt
+        set {_nbt} to nbt compound of loop-value
+        set {_chance} to "tag;zcratemaker-chance" tag of {_nbt}
         add {_chance} to {_maxchance}
         set {_maxchance::%loop-index%} to {_maxchance}
     loop 50 times:
@@ -86,7 +87,8 @@ function zcratemaker_animations_csgo(p: player, name: text, dir: text):
     set {_crate} to {zcratemaker::crates::%{_name}%::guicratename}
     set {_prefix} to "%zcratemaker_getconfig("prefix")%"
 
-    set {_command} to "zcratemaker-command" tag of {_wonItem}'s nbt
+    set {_nbt} to nbt compound of {_wonItem}
+    set {_command} to "tag;zcratemaker-command" tag of {_nbt}
     if {_command} is set:
         set {_commands::*} to {_command} split by "||"
         loop {_commands::*}:
@@ -123,7 +125,9 @@ function zcratemaker_animations_lightning(p: player, name: text):
     set {_maxchance} to 0
     loop {zcratemaker::crates::%{_name}%::items::*}:
         set {_minchance::%loop-index%} to {_maxchance}
-        set {_chance} to "zcratemaker-chance" tag of loop-value's nbt
+
+        set {_nbt} to nbt compound of loop-value
+        set {_chance} to "tag;zcratemaker-chance" tag of {_nbt}
         add {_chance} to {_maxchance}
         set {_maxchance::%loop-index%} to {_maxchance}
     loop 50 times:
@@ -198,7 +202,8 @@ function zcratemaker_animations_lightning(p: player, name: text):
     set {_crate} to {zcratemaker::crates::%{_name}%::guicratename}
     set {_prefix} to "%zcratemaker_getconfig("prefix")%"
 
-    set {_command} to "zcratemaker-command" tag of {_wonItem}'s nbt
+    set {_nbt} to nbt compound of {_wonItem}
+    set {_command} to "tag;zcratemaker-command" tag of {_nbt}
     if {_command} is set:
         set {_commands::*} to {_command} split by "||"
         loop {_commands::*}:
@@ -234,7 +239,8 @@ function zcratemaker_animations_soul(p: player, name: text):
     set {_maxchance} to 0
     loop {zcratemaker::crates::%{_name}%::items::*}:
         set {_minchance::%loop-index%} to {_maxchance}
-        set {_chance} to "zcratemaker-chance" tag of loop-value's nbt
+        set {_nbt} to nbt compound of loop-value
+        set {_chance} to "tag;zcratemaker-chance" tag of {_nbt}
         add {_chance} to {_maxchance}
         set {_maxchance::%loop-index%} to {_maxchance}
     loop 50 times:
@@ -294,7 +300,8 @@ function zcratemaker_animations_soul(p: player, name: text):
     set {_crate} to {zcratemaker::crates::%{_name}%::guicratename}
     set {_prefix} to "%zcratemaker_getconfig("prefix")%"
 
-    set {_command} to "zcratemaker-command" tag of {_wonItem}'s nbt
+    set {_nbt} to nbt compound of {_wonItem}
+    set {_command} to "tag;zcratemaker-command" tag of {_nbt}
     if {_command} is set:
         set {_commands::*} to {_command} split by "||"
         loop {_commands::*}:
