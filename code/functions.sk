@@ -45,7 +45,9 @@ function zcratemaker_createcrate(name: text) :: boolean: # Will return true if w
     set {zcratemaker::crates::%{_name}%::cratekeyname} to "&6%{_name}% Key"
     set {zcratemaker::crates::%{_name}%::cratekeylore} to "&bRight click the %{_name}% crate to open."
 
-    add 1 of stone shovel named "&eExample Item" with nbt "{zcratemaker-chance:1}" to {zcratemaker::crates::%{_name}%::items::*}
+    set {_nbt} to nbt compound of "{zcratemaker-chance:1}"
+
+    add 1 of stone shovel named "&eExample Item" with nbt {_nbt} to {zcratemaker::crates::%{_name}%::items::*}
 
     return true
 
@@ -59,7 +61,8 @@ function zcratemaker_generatekey(name: text) :: item:
     set {_item} to 1 of {zcratemaker::crates::%{_name}%::cratekeyitem}
     set {_name1} to {zcratemaker::crates::%{_name}%::cratekeyname}
     set {_lore::*} to {zcratemaker::crates::%{_name}%::cratekeylore} split by "||"
-    set {_item} to 1 of {_item} named {_name1} with lore {_lore::*} with nbt "{zcratemakerkey:""%{_name}%""}"
+    set {_nbt} to nbt compound of "{zcratemakerkey:""%{_name}%""}"
+    set {_item} to 1 of {_item} named {_name1} with lore {_lore::*} with nbt {_nbt}
     return {_item}
 
 function zcratemaker_deletecrate(name: text) :: boolean:

@@ -50,7 +50,8 @@ function zcratemaker_gui_preview(p: player, crate: text, type: text):
     if {_type} is "main":
         set {_back-slot::*} to zcratemaker_getconfig("preview [back-slot]")
         set {_back-item::*} to zcratemaker_getconfig("preview [back-item]")
-        set slot {_back-slot::1} of {_gui} to {_back-item::1} with nbt "{backbutton:1}"
+        set {_nbt} to nbt compound of "{backbutton:1}"
+        set slot {_back-slot::1} of {_gui} to {_back-item::1} with nbt {_nbt}
 
     set {_slot} to -1
     loop {zcratemaker::crates::%{_crate}%::items::*}:
