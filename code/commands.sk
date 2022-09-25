@@ -220,7 +220,7 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
                 add {_amt} ? 1 of {_item} to {_p}'s inventory
                 send "&aYou have given %{_p}% %{_amt} ? 1% physical %arg 3 ? "1"% crate key(s)."
             if arg 4 is "v" or "virtual":
-                zcratemaker_givekey(player, arg 3, "%{_amt} ? 1%" parsed as integer)
+                zcratemaker_givekey({_p}, arg 3, "%{_amt} ? 1%" parsed as integer)
                 send "&aYou have given %{_p}% %{_amt} ? 1% virtual %arg 3 ? "1"% crate key(s)."
         
         else if arg 1 is "additem":
