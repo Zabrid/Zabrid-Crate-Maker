@@ -42,6 +42,7 @@ function zcratemaker_sendchatquery(p: player, crate: text, query: text):
         send formatted "&6 -> &eTo create multiple lines use ""||"" to split the them. <suggest command:&aLore Line 1||&cLore Line 2||&bLore Line 3||&3Lore Line 4>&7(Example)" to {_p}
         send "" to {_p}
         set {_message} to {zcratemaker::crates::%{_crate}%::cratekeylore}
+        replace all "§" in {_message} with "~~"
         send formatted "&b&l -> &7Copy what the lore is currently set to by clicking <suggest command:%{_message}%>&b&nHere" to {_p}
         send "" to {_p}
         send "&c&l -> &7Type 'cancel' to cancel the change." to {_p}
@@ -83,6 +84,7 @@ function zcratemaker_sendchatquery(p: player, crate: text, query: text):
         send formatted "&6 -> &eTo create multiple lines use ""||"" to split the them. <suggest command:&aLore Line 1||&cLore Line 2||&bLore Line 3||&3Lore Line 4>&7(Example)" to {_p}
         send "" to {_p}
         set {_message} to {zcratemaker::crates::%{_crate}%::guicratelore}
+        replace all "§" in {_message} with "~~"
         send formatted "&b&l -> &7Copy what the lore is currently set to by clicking <suggest command:%{_message}%>&b&nHere" to {_p}
         send "" to {_p}
         send "&c&l -> &7Type 'cancel' to cancel the change." to {_p}
@@ -147,7 +149,9 @@ on chat:
         set {_oldlore::*} to {zcratemaker::crates::%{_crate}%::cratekeylore} split by "||"
         loop {_oldlore::*}:
             set {_oldlore::%loop-index%} to "&c - &f%loop-value%"
-        set {zcratemaker::crates::%{_crate}%::cratekeylore} to colored message
+        set {_message} to colored message
+        replace all "~~" in {_message} with "§"
+        set {zcratemaker::crates::%{_crate}%::cratekeylore} to {_message}
         set {_newlore::*} to {zcratemaker::crates::%{_crate}%::cratekeylore} split by "||"
         loop {_newlore::*}:
             set {_newlore::%loop-index%} to "&a - &f%loop-value%"
@@ -186,7 +190,9 @@ on chat:
         set {_oldlore::*} to {zcratemaker::crates::%{_crate}%::guicratelore} split by "||"
         loop {_oldlore::*}:
             set {_oldlore::%loop-index%} to "&c - &f%loop-value%"
-        set {zcratemaker::crates::%{_crate}%::guicratelore} to colored message
+        set {_message} to colored message
+        replace all "~~" in {_message} with "§"
+        set {zcratemaker::crates::%{_crate}%::guicratelore} to {_message}
         set {_newlore::*} to {zcratemaker::crates::%{_crate}%::guicratelore} split by "||"
         loop {_newlore::*}:
             set {_newlore::%loop-index%} to "&a - &f%loop-value%"

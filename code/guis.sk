@@ -30,9 +30,12 @@ function zcratemaker_gui_main(p: player):
         set {_item} to {zcratemaker::crates::%{_crate}%::guicrateitem} with all flags hidden
         set {_slot} to {zcratemaker::crates::%{_crate}%::guicrateslot}
         set {_name} to {zcratemaker::crates::%{_crate}%::guicratename}
+        set {_pkey} to zcratemaker_generatekey({_crate})
         set {_lore::*} to {zcratemaker::crates::%{_crate}%::guicratelore} split by "||"
         replace all "{keys}" in {_lore::*} with "%{zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} ? 0%"
         replace all "{keys}" in {_name} with "%{zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} ? 0%"
+        replace all "{pkeys}" in {_lore::*} with "%amount of {_pkey} in {_p}'s inventory%"
+        replace all "{pkeys}" in {_name} with "%amount of {_pkey} in {_p}'s inventory%"
         set slot {_slot} of {_gui} to 1 of {_item} named {_name} with lore {_lore::*}
     
     open {_gui} to {_p}
@@ -163,12 +166,16 @@ function zcratemaker_gui_editcrategui(p: player, crate: text):
 
     set slot 22 of {_gui} to 1 of birch door named "&cReturn to previous menu."
 
+    set slot 26 of {_gui} to 1 of paper named "&6Available Placeholders" with lore "" and "&e{keys}" and "&7Refers to have many virtual" and "&7crate keys a player has." and "" and "&e{pkeys}" and "&7Refers to how many physical" and "&7crate keys a player has." and ""
+
     set {_item} to {zcratemaker::crates::%{_crate}%::guicrateitem}
     set {_name} to {zcratemaker::crates::%{_crate}%::guicratename}
     set {_slot} to {zcratemaker::crates::%{_crate}%::guicrateslot}
     set {_lore::*} to {zcratemaker::crates::%{_crate}%::guicratelore} split by "||"
     replace all "{keys}" in {_lore::*} with "0"
     replace all "{keys}" in {_name} with "0"
+    replace all "{pkeys}" in {_lore::*} with "0"
+    replace all "{pkeys}" in {_name} with "0"
     set slot 4 of {_gui} to 1 of {_item} named {_name} with lore {_lore::*}
 
     if {zcratemaker::crates::%{_crate}%::guicrateshow} is false:
@@ -200,8 +207,26 @@ on inventory click:
             set {_crate} to loop-value
             if index of clicked slot is {_slot}:
                 if click action is left mouse button:
+                    set {_pkey} to zcratemaker_generatekey({_crate})
                     if {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} is greater than 0:
                         subtract 1 from {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
+                        if {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} is 0:
+                            delete {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
+                        if {zcratemaker::crates::%{_crate}%::animation} is not set:
+                            zcratemaker_opencrate(player, {_crate})
+                            zcratemaker_gui_main(player)
+                        else if {zcratemaker::crates::%{_crate}%::animation} is "None":
+                            zcratemaker_opencrate(player, {_crate})
+                            zcratemaker_gui_main(player)
+                        else if {zcratemaker::crates::%{_crate}%::animation} is "CSGO":
+                            zcratemaker_animations_csgo(player, {_crate}, "%zcratemaker_getconfig("animations [csgo] [direction]")%")
+                        else if {zcratemaker::crates::%{_crate}%::animation} is "Lightning":
+                            zcratemaker_animations_lightning(player, {_crate})
+                        else if {zcratemaker::crates::%{_crate}%::animation} is "Soul":
+                            zcratemaker_animations_soul(player, {_crate})
+                    
+                    else if amount of {_pkey} in player's inventory is greater than 0:
+                        remove 1 of {_pkey} from player's inventory
                         if {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} is 0:
                             delete {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
                         if {zcratemaker::crates::%{_crate}%::animation} is not set:
