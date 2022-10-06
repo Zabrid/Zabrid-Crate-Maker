@@ -1,10 +1,10 @@
 options:
-    config-version: 1.0.0
+    config-version: 1.2.0
 # ###################################################################
 
 # Zabrid's Crate Maker
 # Author(s): {zabrid}#3433
-# Version: 1.0.0
+# Version: 1.2.0
 
 # ###################################################################
 
@@ -25,7 +25,9 @@ options:
     message [need-key]: "{prefix} &7You need to be holding a &6{crate} Key&7 to open this crate."
     message [not-enough-keys]: "{prefix} &7You do not have any crate keys to open."
 
-
+    message [keys-header]: "" and "&6&n{player}&7's virtual crate keys!" and ""
+    message [keys-middle]: "&7{crate} &8- &7{keys} virtual keys"
+    message [keys-footer]: ""
 
 # ###################################################################
 
@@ -47,6 +49,9 @@ function zcratemaker_getlang(t: text) :: objects:
         return {@message [not-enough-keys]}
     else if {_t} is "need-key":
         return {@message [need-key]}
-
-function zcratemaker_reloadlang():
-    execute console command "sk reload %script%"
+    else if {_t} is "keys-header":
+        return {@message [keys-header]}
+    else if {_t} is "keys-middle":
+        return {@message [keys-middle]}
+    else if {_t} is "keys-footer":
+        return {@message [keys-footer]}

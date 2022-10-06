@@ -51,15 +51,42 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
             send ""
             send "&6 -> &e/crate &7&o(zcratemaker.gui)"
             send "&6 -> &e/crate list &7&o(zcratemaker.list)"
+            send "&6 -> &e/crate keys <player?you> &7&o(zcratemaker.keys)"
             send "&6 -> &e/crate create <name> &7&o(zcratemaker.create)"
             send "&6 -> &e/crate delete <name> &7&o(zcratemaker.delete)"
             send "&6 -> &e/crate edit <name> &7&o(zcratemaker.edit)"
             send "&6 -> &e/crate setcrate <name> &7&o(zcratemaker.setcrate)"
             send "&6 -> &e/crate give <player> <crate> <type> <amt?1> &7&o(zcratemaker.give)"
             send "&6 -> &e/crate giveall <crate> <type> <amt?1> &7&o(zcratemaker.giveall)"
-            send "&8 -> &e/crate additem <crate> <type=item,command> <chance> <command(s)> &7&o(zcratemaker.additem)"
+            send "&6 -> &e/crate take <player> <crate> <amt?1> &7&o(zcratemaker.take)"
+            send "&6 -> &e/crate additem <crate> <type=item,command> <chance> <command(s)> &7&o(zcratemaker.additem)"
             send ""
 
+        else if arg 1 is "keys":
+            if player has permission "zcratemaker.keys":   
+                set {_allow} to true
+            if sender is console:
+                set {_allow} to true
+            if {_allow} is not true:
+                send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
+                stop
+            if arg 2 is not set: # This was done because skript was being buggy
+                set {_arg} to "%player%"
+            else:
+                set {_arg} to arg 2
+            set {_p} to {_arg} parsed as player
+            if {_p} is not set:
+                send "&cThe player you specified is not online."
+                stop
+            set {_uuid} to uuid of {_p}
+            send zcratemaker_formatbasicmessage("%{_p}%", zcratemaker_getlang("keys-header")) 
+            loop {zcratemaker::crates::*}:
+                set {_message::*} to zcratemaker_formatbasicmessage("%{_p}%", zcratemaker_getlang("keys-middle"))
+                replace all "{crate}" in {_message::*} with "%{zcratemaker::crates::%loop-value%::guicratename} ? 0%"
+                replace all "{keys}" in {_message::*} with "%{zcratemaker::crates::keys::%loop-value%::%{_uuid}%} ? 0%"
+                send {_message::*}
+            send zcratemaker_formatbasicmessage("%{_p}%", zcratemaker_getlang("keys-footer")) 
+            
         else if arg 1 is "create":
             if player has permission "zcratemaker.create":   
                 set {_allow} to true
@@ -225,6 +252,41 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
                 zcratemaker_givekey({_p}, arg 3, "%{_amt} ? 1%" parsed as integer)
                 send "&aYou have given %{_p}% %{_amt} ? 1% virtual %arg 3 ? "1"% crate key(s)."
         
+        else if arg 1 is "take":
+            if player has permission "zcratemaker.take":
+                set {_allow} to true
+            if sender is console:
+                set {_allow} to true
+            if {_allow} is not set:
+                send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
+                stop
+            if arg 2 is not set:
+                send "&cYou must specify a player to take the crate from."
+                send "&8 -> &e/crate take <player> <crate> <amt?1>"
+                stop
+            set {_p} to arg 2 parsed as player
+            if {_p} is not set:
+                send "&cThe player you specified is not online."
+                stop
+            set {_uuid} to uuid of {_p}
+            set {_list::*} to {zcratemaker::crates::*}
+            if {_list::*} does not contain arg 3:
+                send "&cThe crate you specified does not seem to exist."
+                stop
+            set {_amt} to arg 4 parsed as integer
+            if {_amt} is not set:
+                set {_amt} to 1
+            if {zcratemaker::crates::keys::%arg 3%::%{_uuid}%} is less than 1:
+                send "&cThe player you specific does not have any virtual keys for this crate."
+                stop
+            if {zcratemaker::crates::keys::%arg 3%::%{_uuid}%} is not set:
+                send "&cThe player you specific does not have any virtual keys for this crate."
+                stop
+            if {zcratemaker::crates::keys::%arg 3%::%{_uuid}%} - {_amt} is less than or equal to 0:
+                set {_amt} to {zcratemaker::crates::keys::%arg 3%::%{_uuid}%}
+            set {zcratemaker::crates::keys::%arg 3%::%{_uuid}%} to {zcratemaker::crates::keys::%arg 3%::%{_uuid}%} - {_amt}
+            send "&aYou have taken %{_amt}%x virtual %arg 3% crate keys from %{_p}%."
+
         else if arg 1 is "additem":
             set {_chance} to arg 4 parsed as number
             if player does not have permission "zcratemaker.additem":
