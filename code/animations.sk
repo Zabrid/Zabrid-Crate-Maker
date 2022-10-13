@@ -92,7 +92,7 @@ function zcratemaker_animations_csgo(p: player, name: text, dir: text):
     if {_command} is set:
         set {_commands::*} to {_command} split by "||"
         loop {_commands::*}:
-            set {_cmd} to loop-value-2
+            set {_cmd} to loop-value-1
             replace all "{player}" and "{p}" in {_cmd} with "%{_p}%"
             execute console command {_cmd}
         
@@ -207,7 +207,7 @@ function zcratemaker_animations_lightning(p: player, name: text):
     if {_command} is set:
         set {_commands::*} to {_command} split by "||"
         loop {_commands::*}:
-            set {_cmd} to loop-value-2
+            set {_cmd} to loop-value-1
             replace all "{player}" and "{p}" in {_cmd} with "%{_p}%"
             execute console command {_cmd}
         
@@ -305,7 +305,7 @@ function zcratemaker_animations_soul(p: player, name: text):
     if {_command} is set:
         set {_commands::*} to {_command} split by "||"
         loop {_commands::*}:
-            set {_cmd} to loop-value-2
+            set {_cmd} to loop-value-1
             replace all "{player}" and "{p}" in {_cmd} with "%{_p}%"
             execute console command {_cmd}
         
