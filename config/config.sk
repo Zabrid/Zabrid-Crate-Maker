@@ -21,6 +21,16 @@ options:
     gui [size]: 3
     gui [fill-item]: 1 of black stained glass pane named "&6Crates" # set to `air` to disable
 
+  # Configuration for how you want users to interact with the crates in the /crates GUI
+  # If you want to disable any of the buttons just set the option as ""
+  # For a full list of possible buttons go to: https://skripthub.net/docs/?id=2137
+    button [preview]: "right mouse button"
+    button [open]: "left mouse button"
+    button [open all]: "drop key"
+
+  # What is the max amount of crates the "open all" function can open at once?
+    button [open all] [limit]: 999
+
   # Preview GUI Customization
     preview [name]: "&6Previewing Crate"
     preview [size]: 6
@@ -127,6 +137,15 @@ function zcratemaker_getconfig(t: text) :: objects:
         return {@animations [soul] [winning-sound]}
     else if {_t} is "animations [soul] [rolling-sound]":
         return {@animations [soul] [rolling-sound]}
+
+    else if {_t} is "button [preview]":
+        return {@button [preview]}
+    else if {_t} is "button [open]":
+        return {@button [open]}
+    else if {_t} is "button [open all]":
+        return {@button [open all]}
+    else if {_t} is "button [open all] [limit]":
+        return {@button [open all] [limit]}
 
     else:
         return "Invalid value specified."

@@ -35,7 +35,7 @@ function zcratemaker_createcrate(name: text) :: boolean: # Will return true if w
     set {zcratemaker::crates::%{_name}%::guicrateitem} to ender chest
     set {zcratemaker::crates::%{_name}%::guicrateslot} to 0
     set {zcratemaker::crates::%{_name}%::guicratename} to "&6%{_name}% Crate"  # This is used for the GUI item
-    set {zcratemaker::crates::%{_name}%::guicratelore} to "||&7Virtual Keys: &e{keys}||&7Physical Keys: &e{pkeys}||||&bLeft click to open this crate||&bRight click to preview this crate||&bMiddle click to open all keys"
+    set {zcratemaker::crates::%{_name}%::guicratelore} to "||&7Virtual Keys: &e{keys}||&7Physical Keys: &e{pkeys}||||&bLeft click to open this crate||&bRight click to preview this crate||&bPress ""Q"" to open all keys"
 
     # Animations
     set {zcratemaker::crates::%{_name}%::animation} to "None"

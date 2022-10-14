@@ -206,7 +206,7 @@ on inventory click:
             set {_slot} to {zcratemaker::crates::%loop-value%::guicrateslot}
             set {_crate} to loop-value
             if index of clicked slot is {_slot}:
-                if click action is left mouse button:
+                if "%click action%" is zcratemaker_getconfig("button [open]"):
                     set {_pkey} to zcratemaker_generatekey({_crate})
                     if {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} is greater than 0:
                         subtract 1 from {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
@@ -253,18 +253,28 @@ on inventory click:
                         replace all "{crate}" in {_message::*} with {_crate}
                         replace all "{player}" and "{p}" in {_message::*} with "%player%"
                         send {_message::*} to player
-                else if click action is right mouse button:
+                else if "%click action%" is zcratemaker_getconfig("button [preview]"):
                     zcratemaker_gui_preview(player, loop-value, "main")
-                else if click action is middle mouse button:
+                if "%click action%" is zcratemaker_getconfig("button [open all]"):
                     if player does not have permission "zcratemaker.openall":
                         send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
                         stop      
                     if {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} is greater than 0:
+                        set {_counter} to 0
+                        set {_optimize} to 0
+                        set {_max::*} to zcratemaker_getconfig("button [open all] [limit]")
                         loop {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} times:
                             subtract 1 from {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
                             if {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} is 0:
                                 delete {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
                             zcratemaker_opencrate(player, {_crate})
+                            add 1 to {_counter}
+                            add 1 to {_optimize}
+                            if {_counter} is equal to {_max::1}:
+                                stop
+                            if {_optimize} is equal to 50:
+                                set {_optimize} to 0
+                                wait 1 tick
                     else:
                         set {_message::*} to zcratemaker_getlang("not-enough-keys")
 
