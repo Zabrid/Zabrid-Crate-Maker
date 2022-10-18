@@ -119,12 +119,12 @@ function zcratemaker_opencrate(p: player, name: text):# Thanks Sovde#0001 for th
         stop
 
 on right click:
+    set {_tag} to {zcratemaker::cratelocations::%location of event-block%}
+    {_tag} is set
     set {_nbt} to nbt compound of player's tool
     set {_key} to tag "tag;zcratemakerkey" of {_nbt}
     if {_key} is set:
         cancel event
-    set {_tag} to {zcratemaker::cratelocations::%location of event-block%}
-    {_tag} is set
     cancel event
     if {_tag} is "*":
         zcratemaker_gui_main(player)

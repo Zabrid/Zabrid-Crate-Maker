@@ -41,10 +41,6 @@ options:
     preview [back-slot]: 53
     preview [back-item]: 1 of birch door named "&cReturn to previous menu." with lore "&7Click to return to the previous menu."
 
-  # Miscellaneous
-    # Do you want users to be able to use virtual keys on the physical crates?
-    allow-users-to-use-virtual-on-physical: true
-
   # Animation GUI Customization
     animations [gui-name]: "&6Opening Crate..." # Make sure this gui name is unique to any other GUIs
 
@@ -150,9 +146,6 @@ function zcratemaker_getconfig(t: text) :: objects:
         return {@button [open all]}
     else if {_t} is "button [open all] [limit]":
         return {@button [open all] [limit]}
-    
-    else if {_t} is "allow-users-to-use-virtual-on-physical":
-        return {@allow-users-to-use-virtual-on-physical}
 
     else:
         return "Invalid value specified."

@@ -12,11 +12,16 @@
 # ###################################################################
 
 function zcratemaker_animations_csgo(p: player, name: text, dir: text):
+
+    # Simply checking to see if the crate exists. This is for redundency
     {zcratemaker::crates::%{_name}%} is set
 
+    # Getting all config information
     set {_gui-name::*} to zcratemaker_getconfig("animations [gui-name]")
     set {_gui-fill::*} to zcratemaker_getconfig("animations [csgo] [fill-item]")
     set {_gui-win::*} to zcratemaker_getconfig("animations [csgo] [win-item]")
+
+    # Creating the inventory
     set {_gui} to chest inventory named {_gui-name::1} with 3 rows
     open {_gui} to {_p}
 
@@ -114,11 +119,15 @@ function zcratemaker_animations_csgo(p: player, name: text, dir: text):
 
 function zcratemaker_animations_lightning(p: player, name: text):
 
+    # Simply checking to see if the crate exists. This is for redundency
     {zcratemaker::crates::%{_name}%} is set
 
+    # Getting all config information
     set {_gui-name::*} to zcratemaker_getconfig("animations [gui-name]")
     set {_gui-fill::*} to zcratemaker_getconfig("animations [lightning] [fill-item]")
     set {_gui-win::*} to zcratemaker_getconfig("animations [lightning] [win-item]")
+
+    # Creating the inventory
     set {_gui} to chest inventory named {_gui-name::1} with 5 rows
     open {_gui} to {_p}
 
@@ -228,11 +237,15 @@ function zcratemaker_animations_lightning(p: player, name: text):
     stop
 
 function zcratemaker_animations_soul(p: player, name: text):
+    # Simply checking to see if the crate exists. This is for redundency
     {zcratemaker::crates::%{_name}%} is set
 
+    # Getting all config information
     set {_gui-name::*} to zcratemaker_getconfig("animations [gui-name]")
     set {_gui-fill::*} to zcratemaker_getconfig("animations [soul] [fill-item]")
     set {_gui-win::*} to zcratemaker_getconfig("animations [soul] [win-item]")
+
+    # Creating the inventory
     set {_gui} to chest inventory named {_gui-name::1} with 5 rows
     open {_gui} to {_p}
 
