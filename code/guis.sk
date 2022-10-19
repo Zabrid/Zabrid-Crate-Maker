@@ -37,6 +37,12 @@ function zcratemaker_gui_main(p: player):
         replace all "{pkeys}" in {_lore::*} with "%amount of {_pkey} in {_p}'s inventory%"
         replace all "{pkeys}" in {_name} with "%amount of {_pkey} in {_p}'s inventory%"
         set slot {_slot} of {_gui} to 1 of {_item} named {_name} with lore {_lore::*}
+
+        if {_used-slots::*} contains {_slot}:
+            if {_p} is op:
+                send "&c&l[Z-CRATES ERROR] &72 Crates have been set to have identical slots. This may cause many issues, be aware." to {_p}
+        else:
+            add {_slot} to {_used-slots::*}
     
     open {_gui} to {_p}
 
