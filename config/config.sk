@@ -21,6 +21,20 @@ options:
     gui [size]: 3
     gui [fill-item]: 1 of black stained glass pane named "&6Crates" # set to `air` to disable
 
+  # Reroll Configurations
+    # Permission for rerolling: zcratemaker.reroll
+    # Configure the GUI
+    reroll gui [name]: "&6Collect Prize"
+    reroll gui [size]: 1
+    reroll gui [fill-item]: 1 of black stained glass pane named "&6Crates"
+
+    # Items inside of the GUI
+    reroll gui [reroll-collect] [slot]: 2
+    reroll gui [reroll-collect] [item]: 1 of lime stained glass pane named "&aCollect" with lore "&7Click to collect your crate prize."
+    reroll gui [reroll-confirm] [slot]: 6
+    reroll gui [reroll-confirm] [item]: 1 of red stained glass pane named "&cRoll Again" with lore "&7Click to roll again for a chance of a different prize."
+    reroll gui [roll-reward] [slot]: 4  # The slot the preview for the reward won, also removing this will break the whole rerolling system so don't do that
+
   # Configuration for how you want users to interact with the crates in the /crates GUI
   # If you want to disable any of the buttons just set the option as ""
   # For a full list of possible buttons go to: https://skripthub.net/docs/?id=2137
@@ -29,7 +43,7 @@ options:
     button [open all]: "drop key"
 
   # What is the max amount of crates the "open all" function can open at once?
-    button [open all] [limit]: 999
+    button [open all] [limit]: 15
 
   # Preview GUI Customization
     preview [name]: "&6Previewing Crate"
@@ -146,6 +160,27 @@ function zcratemaker_getconfig(t: text) :: objects:
         return {@button [open all]}
     else if {_t} is "button [open all] [limit]":
         return {@button [open all] [limit]}
+
+    else if {_t} is "reroll gui [name]":
+        return {@reroll gui [name]}
+    else if {_t} is "reroll gui [size]":
+        return {@reroll gui [size]}
+    else if {_t} is "reroll gui [fill-item]":
+        return {@reroll gui [fill-item]}
+
+    else if {_t} is "reroll gui [reroll-collect] [slot]":
+        return {@reroll gui [reroll-collect] [slot]}
+    else if {_t} is "reroll gui [reroll-collect] [item]":
+        return {@reroll gui [reroll-collect] [item]}
+
+    else if {_t} is "reroll gui [reroll-confirm] [slot]":
+        return {@reroll gui [reroll-confirm] [slot]}
+    else if {_t} is "reroll gui [reroll-confirm] [item]":
+        return {@reroll gui [reroll-confirm] [item]}
+
+    else if {_t} is "reroll gui [roll-reward] [slot]":
+        return {@reroll gui [roll-reward] [slot]}
+
 
     else:
         return "Invalid value specified."

@@ -201,6 +201,28 @@ function zcratemaker_gui_editcrategui(p: player, crate: text):
 
     open {_gui} to {_p}
 
+function zcratemaker_openrerollgui(p: player, crate: text, reward: item):
+    set {_gui-name::*} to zcratemaker_getconfig("reroll gui [name]")
+    set {_gui-size::*} to zcratemaker_getconfig("reroll gui [size]")
+    set {_gui-fill::*} to zcratemaker_getconfig("reroll gui [fill-item]")
+    set {_gui} to chest inventory named {_gui-name::1} with {_gui-size::1} rows
+    set slot (all integers between 0 and ({_gui-size::1}*9)) of {_gui} to {_gui-fill::1}
+    
+    set {_nbt-crate-name-tag} to nbt compound of "{crate-name:%{_crate}%}"
+
+    set {_confirm-reroll-item::*} to zcratemaker_getconfig("reroll gui [reroll-confirm] [item]")
+    set {_confirm-reroll-slot::*} to zcratemaker_getconfig("reroll gui [reroll-confirm] [slot]")
+    set slot {_confirm-reroll-slot::1} of {_gui} to {_confirm-reroll-item::1} with nbt {_nbt-crate-name-tag}
+
+    set {_collect-reroll-item::*} to zcratemaker_getconfig("reroll gui [reroll-collect] [item]")
+    set {_collect-reroll-slot::*} to zcratemaker_getconfig("reroll gui [reroll-collect] [slot]")
+    set slot {_collect-reroll-slot::1} of {_gui} to {_collect-reroll-item::1} with nbt {_nbt-crate-name-tag}
+
+    set {_preview-slot::*} to zcratemaker_getconfig("reroll gui [roll-reward] [slot]")
+    set slot {_preview-slot::1} of {_gui} to {_reward}
+
+    open {_gui} to {_p}
+
 # Inventory Click
 on inventory click:
     set {_gui-name::*} to zcratemaker_getconfig("gui [name]")
@@ -220,10 +242,10 @@ on inventory click:
                             delete {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
                         if {zcratemaker::crates::%{_crate}%::animation} is not set:
                             zcratemaker_opencrate(player, {_crate})
-                            zcratemaker_gui_main(player)
+                            #zcratemaker_gui_main(player)
                         else if {zcratemaker::crates::%{_crate}%::animation} is "None":
                             zcratemaker_opencrate(player, {_crate})
-                            zcratemaker_gui_main(player)
+                            #zcratemaker_gui_main(player)
                         else if {zcratemaker::crates::%{_crate}%::animation} is "CSGO":
                             zcratemaker_animations_csgo(player, {_crate}, "%zcratemaker_getconfig("animations [csgo] [direction]")%")
                         else if {zcratemaker::crates::%{_crate}%::animation} is "Lightning":
@@ -237,10 +259,10 @@ on inventory click:
                             delete {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
                         if {zcratemaker::crates::%{_crate}%::animation} is not set:
                             zcratemaker_opencrate(player, {_crate})
-                            zcratemaker_gui_main(player)
+                            #zcratemaker_gui_main(player)
                         else if {zcratemaker::crates::%{_crate}%::animation} is "None":
                             zcratemaker_opencrate(player, {_crate})
-                            zcratemaker_gui_main(player)
+                            #zcratemaker_gui_main(player)
                         else if {zcratemaker::crates::%{_crate}%::animation} is "CSGO":
                             zcratemaker_animations_csgo(player, {_crate}, "%zcratemaker_getconfig("animations [csgo] [direction]")%")
                         else if {zcratemaker::crates::%{_crate}%::animation} is "Lightning":
@@ -268,6 +290,7 @@ on inventory click:
                     if {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} is greater than 0:
                         set {_counter} to 0
                         set {_optimize} to 0
+                        set metadata value "opening-all" of player to true
                         set {_max::*} to zcratemaker_getconfig("button [open all] [limit]")
                         loop {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%} times:
                             subtract 1 from {zcratemaker::crates::keys::%{_crate}%::%{_uuid}%}
@@ -277,10 +300,13 @@ on inventory click:
                             add 1 to {_counter}
                             add 1 to {_optimize}
                             if {_counter} is equal to {_max::1}:
-                                stop
+                                stop 1 loop
                             if {_optimize} is equal to 50:
                                 set {_optimize} to 0
                                 wait 1 tick
+                        close player's inventory
+                        wait 1 tick
+                        delete metadata value "opening-all" of player
                     else:
                         set {_message::*} to zcratemaker_getlang("not-enough-keys")
 
@@ -409,3 +435,49 @@ on inventory click:
         else if index of clicked slot is 15:
             click action is left mouse button 
             zcratemaker_sendchatquery(player, {_crate}, "crateguiedit-slot")
+
+    set {_gui-name::*} to zcratemaker_getconfig("reroll gui [name]")
+    set {_uuid} to player's uuid
+    if name of player's current inventory is {_gui-name::1}:
+        cancel event
+        clicked inventory is player's current inventory
+
+        set {_confirm-reroll-slot::*} to zcratemaker_getconfig("reroll gui [reroll-confirm] [slot]")
+        set {_collect-reroll-slot::*} to zcratemaker_getconfig("reroll gui [reroll-collect] [slot]")
+
+        set metadata value "collecting-reward" of player to true
+        if index of clicked slot is {_collect-reroll-slot::1}:
+            close player's inventory
+        else if index of clicked slot is {_confirm-reroll-slot::1}:
+            set {_nbt} to nbt compound of clicked slot
+            set {_crate} to tag "tag;crate-name" of {_nbt}
+            set metadata value "zcratemaker.rerolling" of player to 1
+            delete metadata value "collecting-reward" of player
+            close player's inventory
+            if {zcratemaker::crates::%{_crate}%::animation} is not set:
+                zcratemaker_opencrate(player, {_crate})
+                #zcratemaker_gui_main(player)
+            else if {zcratemaker::crates::%{_crate}%::animation} is "None":
+                zcratemaker_opencrate(player, {_crate})
+                #zcratemaker_gui_main(player)
+            else if {zcratemaker::crates::%{_crate}%::animation} is "CSGO":
+                zcratemaker_animations_csgo(player, {_crate}, "%zcratemaker_getconfig("animations [csgo] [direction]")%")
+            else if {zcratemaker::crates::%{_crate}%::animation} is "Lightning":
+                zcratemaker_animations_lightning(player, {_crate})
+            else if {zcratemaker::crates::%{_crate}%::animation} is "Soul":
+                zcratemaker_animations_soul(player, {_crate})
+
+on inventory close:
+    set {_gui-name::*} to zcratemaker_getconfig("reroll gui [name]")
+    set {_uuid} to player's uuid
+    metadata value "collecting-reward" of player is set
+    delete metadata value "collecting-reward" of player
+    name of event-inventory is {_gui-name::1}
+
+    set {_collect-reroll-slot::*} to zcratemaker_getconfig("reroll gui [reroll-collect] [slot]")
+    set {_wonItem} to slot {_preview-slot::1} of event-inventory
+    set {_preview-slot::*} to zcratemaker_getconfig("reroll gui [roll-reward] [slot]")
+    set {_wonItem} to slot {_preview-slot::1} of event-inventory
+    set {_nbt} to nbt compound of slot {_collect-reroll-slot::1} of event-inventory
+    set {_name} to tag "tag;crate-name" of {_nbt}
+    zcratemaker_givereward(player, {_wonItem}, {_name})
