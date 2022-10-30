@@ -28,7 +28,7 @@ function zcratemaker_animations_csgo(p: player, name: text, dir: text):
     set {_maxchance} to 0
     loop {zcratemaker::crates::%{_name}%::items::*}:
         set {_minchance::%loop-index%} to {_maxchance}
-        set {_nbt} to nbt compound of loop-value
+        set {_nbt} to full nbt compound of loop-value
         set {_chance} to "tag;zcratemaker-chance" tag of {_nbt}
         add {_chance} to {_maxchance}
         set {_maxchance::%loop-index%} to {_maxchance}
@@ -114,7 +114,7 @@ function zcratemaker_animations_lightning(p: player, name: text):
     loop {zcratemaker::crates::%{_name}%::items::*}:
         set {_minchance::%loop-index%} to {_maxchance}
 
-        set {_nbt} to nbt compound of loop-value
+        set {_nbt} to full nbt compound of loop-value
         set {_chance} to "tag;zcratemaker-chance" tag of {_nbt}
         add {_chance} to {_maxchance}
         set {_maxchance::%loop-index%} to {_maxchance}
@@ -210,7 +210,7 @@ function zcratemaker_animations_soul(p: player, name: text):
     set {_maxchance} to 0
     loop {zcratemaker::crates::%{_name}%::items::*}:
         set {_minchance::%loop-index%} to {_maxchance}
-        set {_nbt} to nbt compound of loop-value
+        set {_nbt} to full nbt compound of loop-value
         set {_chance} to "tag;zcratemaker-chance" tag of {_nbt}
         add {_chance} to {_maxchance}
         set {_maxchance::%loop-index%} to {_maxchance}

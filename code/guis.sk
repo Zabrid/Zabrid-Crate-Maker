@@ -59,14 +59,14 @@ function zcratemaker_gui_preview(p: player, crate: text, type: text):
     if {_type} is "main":
         set {_back-slot::*} to zcratemaker_getconfig("preview [back-slot]")
         set {_back-item::*} to zcratemaker_getconfig("preview [back-item]")
-        set {_nbt} to nbt compound of "{backbutton:1}"
+        set {_nbt} to full nbt compound of "{backbutton:1}"
         set slot {_back-slot::1} of {_gui} to {_back-item::1} with nbt {_nbt}
 
     set {_slot} to -1
     loop {zcratemaker::crates::%{_crate}%::items::*}:
         add 1 to {_slot}
         
-        set {_nbt} to nbt compound of loop-value
+        set {_nbt} to full nbt compound of loop-value
         set {_chance} to tag "tag;zcratemaker-chance" of {_nbt}
         set {_lore::*} to zcratemaker_getconfig("preview [reward-item-lore]")
         replace all "{chance}" in {_lore::*} with "%{_chance}%"
@@ -149,7 +149,7 @@ function zcratemaker_gui_itemeditor(p: player, crate: text):
     loop {zcratemaker::crates::%{_crate}%::items::*}:
         add 1 to {_slot}
 
-        set {_nbt} to nbt compound of loop-value-1
+        set {_nbt} to full nbt compound of loop-value-1
         set {_chance} to tag "tag;zcratemaker-chance" of {_nbt}
         set {_commands} to tag "tag;zcratemaker-command" of {_nbt}
         set {_commands::*} to {_commands} split by "||"
@@ -208,7 +208,7 @@ function zcratemaker_openrerollgui(p: player, crate: text, reward: item):
     set {_gui} to chest inventory named {_gui-name::1} with {_gui-size::1} rows
     set slot (all integers between 0 and ({_gui-size::1}*9)) of {_gui} to {_gui-fill::1}
     
-    set {_nbt-crate-name-tag} to nbt compound of "{crate-name:%{_crate}%}"
+    set {_nbt-crate-name-tag} to full nbt compound of "{crate-name:%{_crate}%}"
 
     set {_confirm-reroll-item::*} to zcratemaker_getconfig("reroll gui [reroll-confirm] [item]")
     set {_confirm-reroll-slot::*} to zcratemaker_getconfig("reroll gui [reroll-confirm] [slot]")
@@ -324,7 +324,7 @@ on inventory click:
         clicked inventory is player's current inventory
         set {_back-slot::*} to zcratemaker_getconfig("preview [back-slot]")
         if index of clicked slot is {_back-slot::1}:
-            set {_nbt} to nbt compound of clicked slot
+            set {_nbt} to full nbt compound of clicked slot
             set {_back} to tag "tag;backbutton" of {_nbt}
             {_back} is set
             zcratemaker_gui_main(player)
@@ -449,7 +449,7 @@ on inventory click:
         if index of clicked slot is {_collect-reroll-slot::1}:
             close player's inventory
         else if index of clicked slot is {_confirm-reroll-slot::1}:
-            set {_nbt} to nbt compound of clicked slot
+            set {_nbt} to full nbt compound of clicked slot
             set {_crate} to tag "tag;crate-name" of {_nbt}
             set metadata value "zcratemaker.rerolling" of player to 1
             delete metadata value "collecting-reward" of player
@@ -478,6 +478,6 @@ on inventory close:
     set {_wonItem} to slot {_preview-slot::1} of event-inventory
     set {_preview-slot::*} to zcratemaker_getconfig("reroll gui [roll-reward] [slot]")
     set {_wonItem} to slot {_preview-slot::1} of event-inventory
-    set {_nbt} to nbt compound of slot {_collect-reroll-slot::1} of event-inventory
+    set {_nbt} to full nbt compound of slot {_collect-reroll-slot::1} of event-inventory
     set {_name} to tag "tag;crate-name" of {_nbt}
     zcratemaker_givereward(player, {_wonItem}, {_name})

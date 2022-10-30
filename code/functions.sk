@@ -45,7 +45,7 @@ function zcratemaker_createcrate(name: text) :: boolean: # Will return true if w
     set {zcratemaker::crates::%{_name}%::cratekeyname} to "&6%{_name}% Key"
     set {zcratemaker::crates::%{_name}%::cratekeylore} to "&bRight click the %{_name}% crate to open."
 
-    set {_nbt} to nbt compound of "{zcratemaker-chance:1}"
+    set {_nbt} to full nbt compound of "{zcratemaker-chance:1}"
 
     add 1 of stone shovel named "&eExample Item" with nbt {_nbt} to {zcratemaker::crates::%{_name}%::items::*}
 
@@ -61,7 +61,7 @@ function zcratemaker_generatekey(name: text) :: item:
     set {_item} to 1 of {zcratemaker::crates::%{_name}%::cratekeyitem}
     set {_name1} to {zcratemaker::crates::%{_name}%::cratekeyname}
     set {_lore::*} to {zcratemaker::crates::%{_name}%::cratekeylore} split by "||"
-    set {_nbt} to nbt compound of "{zcratemakerkey:""%{_name}%""}"
+    set {_nbt} to full nbt compound of "{zcratemakerkey:""%{_name}%""}"
     set {_item} to 1 of {_item} named {_name1} with lore {_lore::*} with nbt {_nbt}
     return {_item}
 
@@ -80,7 +80,7 @@ function zcratemaker_opencrate(p: player, name: text):# Thanks Sovde#0001 for th
     {zcratemaker::crates::%{_name}%} is set
     set {_maxchance} to 0
     loop {zcratemaker::crates::%{_name}%::items::*}:
-        set {_nbt} to nbt compound of loop-value
+        set {_nbt} to full nbt compound of loop-value
         set {_minchance::%loop-index%} to {_maxchance}
         set {_chance} to "tag;zcratemaker-chance" tag of {_nbt}
         add {_chance} to {_maxchance}
@@ -103,8 +103,9 @@ function zcratemaker_opencrate(p: player, name: text):# Thanks Sovde#0001 for th
 
 on right click:
     set {_tag} to {zcratemaker::cratelocations::%location of event-block%}
+    set {_uuid} to player's uuid
     {_tag} is set
-    set {_nbt} to nbt compound of player's tool
+    set {_nbt} to full nbt compound of player's tool
     set {_key} to tag "tag;zcratemakerkey" of {_nbt}
     if {_key} is set:
         cancel event
@@ -113,18 +114,23 @@ on right click:
         zcratemaker_gui_main(player)
         stop
     if {_key} is not {_tag}:
+        if {zcratemaker::crates::keys::%{_tag}%::%{_uuid}%} is greater than 0:
+            subtract 1 from {zcratemaker::crates::keys::%{_tag}%::%{_uuid}%}
+            if {zcratemaker::crates::keys::%{_tag}%::%{_uuid}%} is 0:
+                delete {zcratemaker::crates::keys::%{_tag}%::%{_uuid}%}
+        else:
+            set {_item} to {zcratemaker::crates::%{_tag}%::guicrateitem}
+            set {_name} to {zcratemaker::crates::%{_tag}%::guicratename}
+            set {_prefix} to "%zcratemaker_getconfig("prefix")%"
 
-        set {_item} to {zcratemaker::crates::%{_tag}%::guicrateitem}
-        set {_name} to {zcratemaker::crates::%{_tag}%::guicratename}
-        set {_prefix} to "%zcratemaker_getconfig("prefix")%"
-
-        set {_message::*} to zcratemaker_getlang("need-key")
-        replace all "{prefix}" in {_message::*} with {_prefix}
-        replace all "{crate}" in {_message::*} with {_name}
-        replace all "{player}" and "{p}" in {_message::*} with "%player%"
-        send formatted {_message::*} to player
-        stop
-    remove 1 of player's tool from player's inventory
+            set {_message::*} to zcratemaker_getlang("need-key")
+            replace all "{prefix}" in {_message::*} with {_prefix}
+            replace all "{crate}" in {_message::*} with {_name}
+            replace all "{player}" and "{p}" in {_message::*} with "%player%"
+            send formatted {_message::*} to player
+            stop
+    else:
+        remove 1 of player's tool from player's inventory
     if {zcratemaker::crates::%{_tag}%::animation} is not set:
         zcratemaker_opencrate(player, {_tag})
     else if {zcratemaker::crates::%{_tag}%::animation} is "None":
@@ -141,7 +147,7 @@ function zcratemaker_givereward(p: player, wonitem: item, name: text):
     set {_crate} to {zcratemaker::crates::%{_name}%::guicratename}
     set {_prefix} to "%zcratemaker_getconfig("prefix")%"
 
-    set {_nbt} to nbt compound of {_wonItem}
+    set {_nbt} to full nbt compound of {_wonItem}
     set {_command} to "tag;zcratemaker-command" tag of {_nbt}
     if {_command} is set:
         set {_commands::*} to {_command} split by "||"
@@ -152,7 +158,7 @@ function zcratemaker_givereward(p: player, wonitem: item, name: text):
             
     else: 
         set {_item} to {_wonItem}
-        set {_nbt} to nbt compound of {_wonItem}
+        set {_nbt} to full nbt compound of {_wonItem}
         delete tag "tag;zcratemaker-chance" of {_nbt}
         delete tag "tag;zcratemaker-id" of {_nbt}
         set {_item} to item from nbt {_nbt}
