@@ -222,6 +222,7 @@ function zcratemaker_openrerollgui(p: player, crate: text, reward: item):
     set slot {_preview-slot::1} of {_gui} to {_reward}
 
     open {_gui} to {_p}
+    set metadata value "collecting-reward" of {_p} to true
 
 # Inventory Click
 on inventory click:

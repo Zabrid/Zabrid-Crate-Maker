@@ -1,0 +1,16 @@
+# ###################################################################
+
+# Zabrid's Crate Maker
+# Placeholder API Addon
+
+# Feel free to change anything below this point.
+# Although, beware you might break something!
+
+# If you make a change and think that it should be pushed to the official script
+# make a pull request on the GitHub https://github.com/Zabrid/Zabrid-Crate-Maker
+
+# ###################################################################
+
+# Wow this was easier than I thought it would be
+on placeholderapi placeholder request for the prefix "zcratemakerkeys":
+    set the result to "%{zcratemaker::crates::keys::%the identifier%::%player's uuid%} ? 0%"

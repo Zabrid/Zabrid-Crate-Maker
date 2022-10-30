@@ -22,7 +22,7 @@ options:
     # {prefix} = The prefix (duh)
     # {player} = The name of the player
     message [reward]: "{prefix} &7You have recieved &6{reward}&7 from the {crate}&7!"
-    message [need-key]: "{prefix} &7You need to be holding a &6{crate} Key&7 to open this crate."
+    message [need-key]: "{prefix} &7You must have a &6{crate} Key&7 to open this crate."
     message [not-enough-keys]: "{prefix} &7You do not have any crate keys to open."
 
     message [keys-header]: "" and "&6&n{player}&7's virtual crate keys!" and ""
