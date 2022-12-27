@@ -232,8 +232,10 @@ on inventory click:
         cancel event
         clicked inventory is player's current inventory
         loop {zcratemaker::crates::*}:
+            {zcratemaker::crates::%loop-value%::guicrateshow} is true
             set {_slot} to {zcratemaker::crates::%loop-value%::guicrateslot}
             set {_crate} to loop-value
+
             if index of clicked slot is {_slot}:
                 if "%click action%" is zcratemaker_getconfig("button [open]"):
                     set {_pkey} to zcratemaker_generatekey({_crate})
@@ -253,6 +255,7 @@ on inventory click:
                             zcratemaker_animations_lightning(player, {_crate})
                         else if {zcratemaker::crates::%{_crate}%::animation} is "Soul":
                             zcratemaker_animations_soul(player, {_crate})
+                        stop
                     
                     else if amount of {_pkey} in player's inventory is greater than 0:
                         remove 1 of {_pkey} from player's inventory
@@ -270,8 +273,10 @@ on inventory click:
                             zcratemaker_animations_lightning(player, {_crate})
                         else if {zcratemaker::crates::%{_crate}%::animation} is "Soul":
                             zcratemaker_animations_soul(player, {_crate})
+                        stop
 
                     else:
+                        
                         set {_message::*} to zcratemaker_getlang("not-enough-keys")
 
                         set {_reward} to loop-value-1's name
@@ -282,6 +287,7 @@ on inventory click:
                         replace all "{crate}" in {_message::*} with {_crate}
                         replace all "{player}" and "{p}" in {_message::*} with "%player%"
                         send {_message::*} to player
+
                 else if "%click action%" is zcratemaker_getconfig("button [preview]"):
                     zcratemaker_gui_preview(player, loop-value, "main")
                 if "%click action%" is zcratemaker_getconfig("button [open all]"):
@@ -330,6 +336,36 @@ on inventory click:
             {_back} is set
             zcratemaker_gui_main(player)
 
+    set {_gui-name::*} to zcratemaker_getconfig("reroll gui [name]")
+    set {_uuid} to player's uuid
+    if name of player's current inventory is {_gui-name::1}:
+        cancel event
+        clicked inventory is player's current inventory
+
+        set {_confirm-reroll-slot::*} to zcratemaker_getconfig("reroll gui [reroll-confirm] [slot]")
+        set {_collect-reroll-slot::*} to zcratemaker_getconfig("reroll gui [reroll-collect] [slot]")
+
+        set metadata value "collecting-reward" of player to true
+        if index of clicked slot is {_collect-reroll-slot::1}:
+            close player's inventory
+        else if index of clicked slot is {_confirm-reroll-slot::1}:
+            set {_nbt} to full nbt compound of clicked slot
+            set {_crate} to tag "tag;crate-name" of {_nbt}
+            set metadata value "zcratemaker.rerolling" of player to 1
+            delete metadata value "collecting-reward" of player
+            close player's inventory
+            if {zcratemaker::crates::%{_crate}%::animation} is not set:
+                zcratemaker_opencrate(player, {_crate})
+                #zcratemaker_gui_main(player)
+            else if {zcratemaker::crates::%{_crate}%::animation} is "None":
+                zcratemaker_opencrate(player, {_crate})
+                #zcratemaker_gui_main(player)
+            else if {zcratemaker::crates::%{_crate}%::animation} is "CSGO":
+                zcratemaker_animations_csgo(player, {_crate}, "%zcratemaker_getconfig("animations [csgo] [direction]")%")
+            else if {zcratemaker::crates::%{_crate}%::animation} is "Lightning":
+                zcratemaker_animations_lightning(player, {_crate})
+            else if {zcratemaker::crates::%{_crate}%::animation} is "Soul":
+                zcratemaker_animations_soul(player, {_crate})
 
     player has permission "zcratemaker.edit"
     if name of player's current inventory contains "&8Zabrid's Crate Maker | &6&l":
@@ -436,37 +472,6 @@ on inventory click:
         else if index of clicked slot is 15:
             click action is left mouse button 
             zcratemaker_sendchatquery(player, {_crate}, "crateguiedit-slot")
-
-    set {_gui-name::*} to zcratemaker_getconfig("reroll gui [name]")
-    set {_uuid} to player's uuid
-    if name of player's current inventory is {_gui-name::1}:
-        cancel event
-        clicked inventory is player's current inventory
-
-        set {_confirm-reroll-slot::*} to zcratemaker_getconfig("reroll gui [reroll-confirm] [slot]")
-        set {_collect-reroll-slot::*} to zcratemaker_getconfig("reroll gui [reroll-collect] [slot]")
-
-        set metadata value "collecting-reward" of player to true
-        if index of clicked slot is {_collect-reroll-slot::1}:
-            close player's inventory
-        else if index of clicked slot is {_confirm-reroll-slot::1}:
-            set {_nbt} to full nbt compound of clicked slot
-            set {_crate} to tag "tag;crate-name" of {_nbt}
-            set metadata value "zcratemaker.rerolling" of player to 1
-            delete metadata value "collecting-reward" of player
-            close player's inventory
-            if {zcratemaker::crates::%{_crate}%::animation} is not set:
-                zcratemaker_opencrate(player, {_crate})
-                #zcratemaker_gui_main(player)
-            else if {zcratemaker::crates::%{_crate}%::animation} is "None":
-                zcratemaker_opencrate(player, {_crate})
-                #zcratemaker_gui_main(player)
-            else if {zcratemaker::crates::%{_crate}%::animation} is "CSGO":
-                zcratemaker_animations_csgo(player, {_crate}, "%zcratemaker_getconfig("animations [csgo] [direction]")%")
-            else if {zcratemaker::crates::%{_crate}%::animation} is "Lightning":
-                zcratemaker_animations_lightning(player, {_crate})
-            else if {zcratemaker::crates::%{_crate}%::animation} is "Soul":
-                zcratemaker_animations_soul(player, {_crate})
 
 on inventory close:
     set {_gui-name::*} to zcratemaker_getconfig("reroll gui [name]")
