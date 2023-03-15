@@ -28,6 +28,12 @@ on tab complete of "/crates" and "/crate" and "/zcrates":
         add "give" to {_tabs::*}
     if player has permission "zcratemaker.additem":
         add "additem" to {_tabs::*}
+    if player has permission "zcratemaker.additem":
+        add "removeitem" to {_tabs::*}
+    if player has permission "zcratemaker.additem":
+        add "edit" to {_tabs::*}
+    if player has permission "zcratemaker.additem":
+        add "take" to {_tabs::*}
     if player has permission "zcratemaker.setcrate":
         add "setcrate" to {_tabs::*}
     set tab completions for position 1 to {_tabs::*}
@@ -60,6 +66,7 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
             send "&6 -> &e/crate giveall <crate> <type> <amt?1> &7&o(zcratemaker.giveall)"
             send "&6 -> &e/crate take <player> <crate> <amt?1> &7&o(zcratemaker.take)"
             send "&6 -> &e/crate additem <crate> <type=item,command> <chance> <command(s)> &7&o(zcratemaker.additem)"
+            send "&6 -> &e/crate removeitem <crate> <id> &7&o(zcratemaker.removeitem)"
             send ""
 
         else if arg 1 is "keys":
