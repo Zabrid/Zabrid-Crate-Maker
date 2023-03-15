@@ -45,7 +45,7 @@ function zcratemaker_createcrate(name: text) :: boolean: # Will return true if w
     set {zcratemaker::crates::%{_name}%::cratekeyname} to "&6%{_name}% Key"
     set {zcratemaker::crates::%{_name}%::cratekeylore} to "&bRight click the %{_name}% crate to open."
 
-    set {_nbt} to full nbt compound of "{zcratemaker-chance:1}"
+    set {_nbt} to full nbt compound of "{zcratemaker-chance:1,zcratemaker-id:%zcratemaker_genrandomstring(15)%}"
 
     add 1 of stone shovel named "&eExample Item" with nbt {_nbt} to {zcratemaker::crates::%{_name}%::items::*}
 
@@ -90,13 +90,17 @@ function zcratemaker_opencrate(p: player, name: text):# Thanks Sovde#0001 for th
         {_num} is between {_minchance::%loop-index%} and {_maxchance::%loop-index%}
         if metadata value "opening-all" of {_p} is true:
             zcratemaker_givereward({_p}, loop-value-1, {_name})
-        else if {_p} has permission "zcratemaker.reroll":
-            if metadata value "zcratemaker.rerolling" of {_p} is set:
-                delete metadata value "zcratemaker.rerolling" of {_p}
+        if "%zcratemaker_getconfig("reroll [enabled]")%" is "true":
+            if {_p} has permission "zcratemaker.reroll":
+                if metadata value "zcratemaker.rerolling" of {_p} is set:
+                    delete metadata value "zcratemaker.rerolling" of {_p}
+                    zcratemaker_givereward({_p}, loop-value-1, {_name})
+                    close {_p}'s inventory
+                else:
+                    zcratemaker_openrerollgui({_p}, {_name}, loop-value-1)
+            else:
                 zcratemaker_givereward({_p}, loop-value-1, {_name})
                 close {_p}'s inventory
-            else:
-                zcratemaker_openrerollgui({_p}, {_name}, loop-value-1)
         else:
             zcratemaker_givereward({_p}, loop-value-1, {_name})
             close {_p}'s inventory
@@ -149,11 +153,14 @@ function zcratemaker_givereward(p: player, wonitem: item, name: text):
 
     set {_nbt} to full nbt compound of {_wonItem}
     set {_command} to "tag;zcratemaker-command" tag of {_nbt}
+    set {_uuid} to "tag;zcratemaker-id" tag of {_nbt}
     if {_command} is set:
         set {_commands::*} to {_command} split by "||"
         loop {_commands::*}:
             set {_cmd} to loop-value-1
             replace all "{player}" and "{p}" in {_cmd} with "%{_p}%"
+            replace all "{uuid}" in {_cmd} with {_uuid}
+            replace all "{crate}" in {_cmd} with {_name}
             execute console command {_cmd}
             
     else: 

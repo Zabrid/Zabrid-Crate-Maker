@@ -319,7 +319,7 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
                 send "&cThe chance you specified is not a number."
                 stop
             if arg 3 is "item" or "i":
-                set {_nbt} to full nbt compound of "{zcratemaker-chance:%{_chance}%,zcratemaker-id:""%random number between 0 and 10000000%""}"
+                set {_nbt} to full nbt compound of "{zcratemaker-chance:%{_chance}%,zcratemaker-id:""%zcratemaker_genrandomstring(15)%""}"
                 add player's tool with nbt {_nbt} to {zcratemaker::crates::%arg 2%::items::*}
                 send "&aYou have added &2%player's tool%&a to the %arg 2% crate."
                 stop
@@ -330,7 +330,7 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
                     send "&8 -> &e/crate additem %arg 2% command <commands>"
                     stop
                 set {_commands::*} to arg 5 split by "||"
-                set {_nbt} to full nbt compound of "{zcratemaker-command:""%arg 5%"",zcratemaker-chance:%{_chance}%,zcratemaker-id:""%random number between 0 and 10000000%""}"
+                set {_nbt} to full nbt compound of "{zcratemaker-command:""%arg 5%"",zcratemaker-chance:%{_chance}%,zcratemaker-id:""%zcratemaker_genrandomstring(15)%""}"
                 add player's tool with nbt {_nbt} to {zcratemaker::crates::%arg 2%::items::*}
                 send "&aYou have added &2%player's tool%&a to the %arg 2% crate."
                 send ""
@@ -339,7 +339,33 @@ command /crates [<text>] [<text>] [<text>] [<text>] [<text>]:
                     send "&a - &7%loop-value%"
                 send ""
                 stop
-
+        
+        else if arg 1 is "removeitem":
+            set {_chance} to arg 4 parsed as number
+            if sender is not console:
+                if player does not have permission "zcratemaker.removeitem":
+                    send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 
+                    stop
+            if arg 2 is not set:
+                send "&cYou must specify the crate to remove an item from."
+                send "&8 -> &e/crate removeitem <crate> <uuid>"
+                stop
+            if {zcratemaker::crates::%arg 2%} is not set:
+                send "&cThe crate you specified does not seem to exist."
+                stop
+            if arg 3 is not set:
+                send "&cYou must specify the uuid of the item you want to remove."
+                send "&8 -> &e/crate removeitem <crate> <uuid>"
+                stop
+            loop {zcratemaker::crates::%arg 2%::items::*}:
+                set {_nbt} to full nbt compound of loop-value
+                set {_id} to "tag;zcratemaker-id" tag of {_nbt}
+                set {_ids::%{_id}%} to loop-index
+            if {_ids::%arg 3%} is not set:
+                send "&cThe UUID &8(&7%arg 3%&8)&c you specified is not valid."
+                stop
+            delete {zcratemaker::crates::%arg 2%::items::%{_ids::%arg 3%}%}
+            send "&aYou have successfully removed item with UUID &8(&7%arg 3%&8)&a from the &n%arg 2% Crate&a."
         else if arg 1 is "setcrate":
             if player does not have permission "zcratemaker.setcrate":   
                 send zcratemaker_formatbasicmessage("%sender%", zcratemaker_getlang("no-perms")) 

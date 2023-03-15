@@ -87,12 +87,15 @@ function zcratemaker_animations_csgo(p: player, name: text, dir: text):
         open {_gui} to {_p}
     
     set {_wonItem} to slot 13 of {_gui}
-    if {_p} has permission "zcratemaker.reroll":
-        if metadata value "zcratemaker.rerolling" of {_p} is set:
-            delete metadata value "zcratemaker.rerolling" of {_p}
-            zcratemaker_givereward({_p}, {_wonItem}, {_name})
+    if "%zcratemaker_getconfig("reroll [enabled]")%" is "true":
+        if {_p} has permission "zcratemaker.reroll":
+            if metadata value "zcratemaker.rerolling" of {_p} is set:
+                delete metadata value "zcratemaker.rerolling" of {_p}
+                zcratemaker_givereward({_p}, {_wonItem}, {_name})
+            else:
+                zcratemaker_openrerollgui({_p}, {_name}, {_wonItem})
         else:
-            zcratemaker_openrerollgui({_p}, {_name}, {_wonItem})
+            zcratemaker_givereward({_p}, {_wonItem}, {_name})
     else:
         zcratemaker_givereward({_p}, {_wonItem}, {_name})
 
@@ -185,12 +188,15 @@ function zcratemaker_animations_lightning(p: player, name: text):
         open {_gui} to {_p}
     
     set {_wonItem} to slot 22 of {_gui}
-    if {_p} has permission "zcratemaker.reroll":
-        if metadata value "zcratemaker.rerolling" of {_p} is set:
-            delete metadata value "zcratemaker.rerolling" of {_p}
-            zcratemaker_givereward({_p}, {_wonItem}, {_name})
+    if "%zcratemaker_getconfig("reroll [enabled]")%" is "true":
+        if {_p} has permission "zcratemaker.reroll":
+            if metadata value "zcratemaker.rerolling" of {_p} is set:
+                delete metadata value "zcratemaker.rerolling" of {_p}
+                zcratemaker_givereward({_p}, {_wonItem}, {_name})
+            else:
+                zcratemaker_openrerollgui({_p}, {_name}, {_wonItem})
         else:
-            zcratemaker_openrerollgui({_p}, {_name}, {_wonItem})
+            zcratemaker_givereward({_p}, {_wonItem}, {_name})
     else:
         zcratemaker_givereward({_p}, {_wonItem}, {_name})
 
@@ -266,12 +272,15 @@ function zcratemaker_animations_soul(p: player, name: text):
         open {_gui} to {_p}
     
     set {_wonItem} to slot 22 of {_gui}
-    if {_p} has permission "zcratemaker.reroll":
-        if metadata value "zcratemaker.rerolling" of {_p} is set:
-            delete metadata value "zcratemaker.rerolling" of {_p}
-            zcratemaker_givereward({_p}, {_wonItem}, {_name})
+    if "%zcratemaker_getconfig("reroll [enabled]")%" is "true":
+        if {_p} has permission "zcratemaker.reroll":
+            if metadata value "zcratemaker.rerolling" of {_p} is set:
+                delete metadata value "zcratemaker.rerolling" of {_p}
+                zcratemaker_givereward({_p}, {_wonItem}, {_name})
+            else:
+                zcratemaker_openrerollgui({_p}, {_name}, {_wonItem})
         else:
-            zcratemaker_openrerollgui({_p}, {_name}, {_wonItem})
+            zcratemaker_givereward({_p}, {_wonItem}, {_name})
     else:
         zcratemaker_givereward({_p}, {_wonItem}, {_name})
 

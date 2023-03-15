@@ -63,15 +63,49 @@ function zcratemaker_gui_preview(p: player, crate: text, type: text):
         set slot {_back-slot::1} of {_gui} to {_back-item::1} with nbt {_nbt}
 
     set {_slot} to -1
-    loop {zcratemaker::crates::%{_crate}%::items::*}:
-        add 1 to {_slot}
-        
-        set {_nbt} to full nbt compound of loop-value
-        set {_chance} to tag "tag;zcratemaker-chance" of {_nbt}
-        set {_lore::*} to zcratemaker_getconfig("preview [reward-item-lore]")
-        replace all "{chance}" in {_lore::*} with "%{_chance}%"
+    if "%zcratemaker_getconfig("preview [sort by percentages]")%" is "true":
+        loop {zcratemaker::crates::%{_crate}%::items::*}:
+            set {_nbt} to full nbt compound of loop-value
+            set {_chance} to tag "tag;zcratemaker-chance" of {_nbt}
+            set {_list::%loop-index%} to {_chance}
+            
+        loop {_list::*}:
+            add 1 to {_size}
+            if {_low.to.high.list::%loop-value%} is not set:
+                set {_low.to.high.list::%loop-value%} to loop-index
+            else:
+                set {_n} to 0
+                loop {_size} times:
+                    set {_n} to {_n}+1
+                    {_low.to.high.list::%loop-value-1%.%{_n}%} is not set
+                    set {_low.to.high.list::%loop-value-1%.%{_n}%} to loop-index
+                    stop loop
+        set {_n} to size of {_low.to.high.list::*}
+        loop {_low.to.high.list::*}:
+            set {_high.to.low.list::%{_n}%} to loop-value
+            set {_n} to {_n}-1
+            
+        loop reversed {_low.to.high.list::*}:
+            add 1 to {_slot}
+            
+            set {_nbt} to full nbt compound of {zcratemaker::crates::%{_crate}%::items::%loop-value%}
+            set {_chance} to tag "tag;zcratemaker-chance" of {_nbt}
+            set {_lore::*} to zcratemaker_getconfig("preview [reward-item-lore]")
+            replace all "{chance}" in {_lore::*} with "%{_chance}%"
 
-        set slot {_slot} of {_gui} to loop-value with lore {_lore::*}
+            set {_item} to {zcratemaker::crates::%{_crate}%::items::%loop-value%}
+
+            set slot {_slot} of {_gui} to {_item} with lore {_lore::*}
+    else:
+        loop {zcratemaker::crates::%{_crate}%::items::*}:
+            add 1 to {_slot}
+            
+            set {_nbt} to full nbt compound of loop-value
+            set {_chance} to tag "tag;zcratemaker-chance" of {_nbt}
+            set {_lore::*} to zcratemaker_getconfig("preview [reward-item-lore]")
+            replace all "{chance}" in {_lore::*} with "%{_chance}%"
+
+            set slot {_slot} of {_gui} to loop-value with lore {_lore::*}
 
     open {_gui} to {_p}
 
@@ -152,16 +186,17 @@ function zcratemaker_gui_itemeditor(p: player, crate: text):
         set {_nbt} to full nbt compound of loop-value-1
         set {_chance} to tag "tag;zcratemaker-chance" of {_nbt}
         set {_commands} to tag "tag;zcratemaker-command" of {_nbt}
+        set {_id} to tag "tag;zcratemaker-id" of {_nbt}
         set {_commands::*} to {_commands} split by "||"
         set {_lore::*} to zcratemaker_getconfig("preview [reward-item-lore]")
         replace all "{chance}" in {_lore::*} with "%{_chance}%"
         if {_commands::*} is set:
             loop {_commands::*}:
                 set {_commands::%loop-index-2%} to "&6 - &f/%loop-value-2%"
-            set slot {_slot} of {_gui} to loop-value with lore {_lore::*} and "&8-------------------------------------" and "" and "&6Commands:" and {_commands::*} and "" and "&8-------------------------------------" and "&bClick to remove this item from the crate."
+            set slot {_slot} of {_gui} to loop-value with lore {_lore::*} and "&7ID: &8%{_id}%" and "&8-------------------------------------" and "" and "&6Commands:" and {_commands::*} and "" and "&8-------------------------------------" and "&bClick to remove this item from the crate."
 
         else:
-            set slot {_slot} of {_gui} to loop-value with lore {_lore::*} and "&8-------------------------------------" and "&bClick to remove this item from the crate."
+            set slot {_slot} of {_gui} to loop-value with lore {_lore::*} and "&7ID: &8%{_id}%" and "&8-------------------------------------" and "&bClick to remove this item from the crate."
 
     open {_gui} to {_p}
 

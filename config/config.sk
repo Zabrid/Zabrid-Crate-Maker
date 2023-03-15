@@ -23,6 +23,8 @@ options:
 
   # Reroll Configurations
     # Permission for rerolling: zcratemaker.reroll
+    reroll [enabled]: true # set to false to disable rerolling
+
     # Configure the GUI
     reroll gui [name]: "&6Collect Prize"
     reroll gui [size]: 1
@@ -46,6 +48,7 @@ options:
     button [open all] [limit]: 15
 
   # Preview GUI Customization
+    preview [sort by percentages]: true # Do you want the preview GUI to sort by chance?
     preview [name]: "&6Previewing Crate"
     preview [size]: 6
     preview [fill-item]: 1 of black stained glass pane named "&7" # set to `air` to disable
@@ -101,6 +104,8 @@ function zcratemaker_getconfig(t: text) :: objects:
     else if {_t} is "gui [fill-item]":
         return {@gui [fill-item]}
 
+    else if {_t} is "preview [sort by percentages]":
+        return {@preview [sort by percentages]}
     else if {_t} is "preview [name]":
         return {@preview [name]}
     else if {_t} is "preview [size]":
@@ -160,6 +165,9 @@ function zcratemaker_getconfig(t: text) :: objects:
         return {@button [open all]}
     else if {_t} is "button [open all] [limit]":
         return {@button [open all] [limit]}
+
+    else if {_t} is "reroll [enabled]":
+        return {@reroll [enabled]}
 
     else if {_t} is "reroll gui [name]":
         return {@reroll gui [name]}
