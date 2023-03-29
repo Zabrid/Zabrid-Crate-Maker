@@ -8,6 +8,9 @@ If you report an issue which has been fixed or does not contain the information 
 
 ## Dependencies
 Skript: https://github.com/SkriptLang/Skript/releases
+
 SkBee (2.5.0+): https://www.spigotmc.org/resources/skbee-skript-addon.75839/
+
 PlaceholderAPI: https://www.spigotmc.org/resources/placeholderapi.6245/
+
 Skript-Placeholders: https://forums.skunity.com/resources/skript-placeholders.909/
